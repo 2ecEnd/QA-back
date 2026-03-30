@@ -3,7 +3,7 @@ package com.example.qa.controllers;
 import com.example.qa.models.dto.ChangeEntityResponse;
 import com.example.qa.models.dto.CreateEntityResponse;
 import com.example.qa.models.dto.DeleteEntityResponse;
-import com.example.qa.models.dto.products.ProductDto;
+import com.example.qa.models.dto.dishes.DishDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/dishes")
 @RequiredArgsConstructor
-public class ProductController {
+public class DishController {
 
     @PostMapping("/create")
     public ResponseEntity<CreateEntityResponse> createEntity(){
@@ -21,12 +21,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getEntities(){
+    public ResponseEntity<List<DishDto>> getEntities(){
         return ResponseEntity.internalServerError().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getEntity(){
+    public ResponseEntity<DishDto> getEntity(){
         return ResponseEntity.internalServerError().build();
     }
 

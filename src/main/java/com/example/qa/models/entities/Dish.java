@@ -70,7 +70,7 @@ public class Dish {
     @Builder.Default
     public Set<Flag> flags = Collections.<Flag>emptySet();
 
-    @Column(name = "creation_date", nullable = true)
+    @Column(name = "creation_date", nullable = false)
     @CreatedDate
     public LocalDateTime creationDate;
 

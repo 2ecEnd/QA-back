@@ -1,8 +1,8 @@
-package com.example.qa.models.dto.products;
+package com.example.qa.models.dto.dishes;
 
-import com.example.qa.models.enums.ProductCategory;
+import com.example.qa.models.dto.products.ProductDto;
+import com.example.qa.models.enums.DishCategory;
 import com.example.qa.models.enums.Flag;
-import com.example.qa.models.enums.ReadinessDegree;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductDto {
+public class DishDto {
 
     @JsonProperty(value = "Id")
     public UUID id;
@@ -42,13 +42,13 @@ public class ProductDto {
     public Float carbohydrates;
 
     @JsonProperty(value = "Composition")
-    public String composition;
+    public List<ProductDto> composition;
+
+    @JsonProperty(value = "Size")
+    public Float size;
 
     @JsonProperty(value = "Category")
-    public ProductCategory category;
-
-    @JsonProperty(value = "ReadinessDegree")
-    public ReadinessDegree readinessDegree;
+    public DishCategory category;
 
     @JsonProperty(value = "Flags")
     public Set<Flag> flags;
