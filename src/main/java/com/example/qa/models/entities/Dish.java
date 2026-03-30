@@ -2,7 +2,6 @@ package com.example.qa.models.entities;
 
 import com.example.qa.models.enums.DishCategory;
 import com.example.qa.models.enums.Flag;
-import com.example.qa.models.enums.ProductCategory;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -40,19 +39,19 @@ public class Dish {
 
     @Column(name = "calorie_content", nullable = false)
     @Size(min = 0)
-    public Double calorieContent;
+    public Float calorieContent;
 
     @Column(name = "proteins", nullable = false)
     @Size(min = 0, max = 100)
-    public Double proteins;
+    public Float proteins;
 
     @Column(name = "fats", nullable = false)
     @Size(min = 0, max = 100)
-    public Double fats;
+    public Float fats;
 
     @Column(name = "carbohydrates", nullable = false)
     @Size(min = 0, max = 100)
-    public Double carbohydrates;
+    public Float carbohydrates;
 
     @Column(name = "composition", nullable = false)
     @Size(min = 1)
@@ -60,7 +59,7 @@ public class Dish {
     public List<Product> composition;
 
     @Column(name = "size", nullable = false)
-    public Double size;
+    public Float size;
 
     @Column(name = "category", nullable = false)
     @Enumerated(EnumType.STRING)

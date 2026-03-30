@@ -40,19 +40,19 @@ public class Product {
 
     @Column(name = "calorie_content", nullable = false)
     @Size(min = 0)
-    public Double calorieContent;
+    public Float calorieContent;
 
     @Column(name = "proteins", nullable = false)
     @Size(min = 0, max = 100)
-    public Double proteins;
+    public Float proteins;
 
     @Column(name = "fats", nullable = false)
     @Size(min = 0, max = 100)
-    public Double fats;
+    public Float fats;
 
     @Column(name = "carbohydrates", nullable = false)
     @Size(min = 0, max = 100)
-    public Double carbohydrates;
+    public Float carbohydrates;
 
     @Column(name = "composition", nullable = true)
     @Builder.Default
