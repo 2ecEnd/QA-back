@@ -13,16 +13,15 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DishDto {
+public class ChangeDishRequest {
 
     @JsonProperty(value = "Id")
-    public UUID id;
+    public String id;
 
     @JsonProperty(value = "Name")
     public String name;
@@ -52,12 +51,6 @@ public class DishDto {
     public DishCategory category;
 
     @JsonProperty(value = "Flags")
-    public Set<Flag> flags;
-
-    @JsonProperty(value = "CreationDate")
-    public LocalDateTime creationDate;
-
-    @JsonProperty(value = "EditDate")
     @Nullable
-    public LocalDateTime editDate;
+    public Set<Flag> flags;
 }

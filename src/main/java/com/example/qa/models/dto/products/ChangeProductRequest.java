@@ -1,28 +1,20 @@
-package com.example.qa.models.dto.dishes;
+package com.example.qa.models.dto.products;
 
-import com.example.qa.models.dto.products.ProductDto;
-import com.example.qa.models.enums.DishCategory;
 import com.example.qa.models.enums.Flag;
+import com.example.qa.models.enums.ProductCategory;
+import com.example.qa.models.enums.ReadinessDegree;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class DishDto {
+public class ChangeProductRequest {
 
     @JsonProperty(value = "Id")
-    public UUID id;
+    public String id;
 
     @JsonProperty(value = "Name")
     public String name;
@@ -43,21 +35,16 @@ public class DishDto {
     public Float carbohydrates;
 
     @JsonProperty(value = "Composition")
-    public List<ProductDto> composition;
-
-    @JsonProperty(value = "Size")
-    public Float size;
+    @Nullable
+    public String composition;
 
     @JsonProperty(value = "Category")
-    public DishCategory category;
+    public ProductCategory category;
+
+    @JsonProperty(value = "ReadinessDegree")
+    public ReadinessDegree readinessDegree;
 
     @JsonProperty(value = "Flags")
-    public Set<Flag> flags;
-
-    @JsonProperty(value = "CreationDate")
-    public LocalDateTime creationDate;
-
-    @JsonProperty(value = "EditDate")
     @Nullable
-    public LocalDateTime editDate;
+    public Set<Flag> flags;
 }
