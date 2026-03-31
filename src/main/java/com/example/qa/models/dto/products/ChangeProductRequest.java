@@ -1,17 +1,25 @@
 package com.example.qa.models.dto.products;
 
+import com.example.qa.annotations.PfcSum;
 import com.example.qa.models.enums.Flag;
 import com.example.qa.models.enums.ProductCategory;
 import com.example.qa.models.enums.ReadinessDegree;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@PfcSum
 public class ChangeProductRequest {
 
     @JsonProperty(value = "Id")

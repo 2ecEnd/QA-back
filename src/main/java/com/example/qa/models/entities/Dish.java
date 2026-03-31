@@ -3,6 +3,8 @@ package com.example.qa.models.entities;
 import com.example.qa.models.enums.DishCategory;
 import com.example.qa.models.enums.Flag;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +13,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -19,6 +23,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "dishes")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,15 +48,18 @@ public class Dish {
     public Float calorieContent;
 
     @Column(name = "proteins", nullable = false)
-    @Size(min = 0, max = 100)
+    @DecimalMin("0")
+    @DecimalMax("100")
     public Float proteins;
 
     @Column(name = "fats", nullable = false)
-    @Size(min = 0, max = 100)
+    @DecimalMin("0")
+    @DecimalMax("100")
     public Float fats;
 
     @Column(name = "carbohydrates", nullable = false)
-    @Size(min = 0, max = 100)
+    @DecimalMin("0")
+    @DecimalMax("100")
     public Float carbohydrates;
 
     @JoinColumn(name = "composition", nullable = false)

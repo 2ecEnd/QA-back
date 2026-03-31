@@ -11,6 +11,7 @@ import com.example.qa.models.enums.ProductCategory;
 import com.example.qa.models.enums.ReadinessDegree;
 import com.example.qa.models.enums.SortField;
 import com.example.qa.services.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class ProductController {
     final ProductService productService;
 
     @PostMapping("/create")
-    public ResponseEntity<CreateEntityResponse> createEntity(CreateProductRequest request){
+    public ResponseEntity<CreateEntityResponse> createEntity(@RequestBody @Valid CreateProductRequest request){
         return productService.createEntity(request);
     }
 
@@ -45,18 +46,18 @@ public class ProductController {
                 sort);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getEntity(UUID request){
+    @GetMapping("/get/{id}")
+    public ResponseEntity<ProductDto> getEntity(@RequestParam(name = "id") UUID request){
         return productService.getEntity(request);
     }
 
     @PutMapping("/change")
-    public ResponseEntity<ChangeEntityResponse> changeEntity(ChangeProductRequest request){
+    public ResponseEntity<ChangeEntityResponse> changeEntity(@RequestBody @Valid ChangeProductRequest request){
         return productService.changeEntity(request);
     }
 
-    @GetMapping("/delete")
-    public ResponseEntity<DeleteEntityResponse> deleteEntity(UUID request){
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<DeleteEntityResponse> deleteEntity(@RequestParam(name = "id") UUID request){
         return productService.deleteEntity(request);
     }
 }

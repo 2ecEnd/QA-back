@@ -1,5 +1,6 @@
 package com.example.qa.models.dto.dishes;
 
+import com.example.qa.annotations.PfcSum;
 import com.example.qa.models.enums.DishCategory;
 import com.example.qa.models.enums.Flag;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,6 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@PfcSum
 public class CreateDishRequest {
 
     @JsonProperty(value = "Name")

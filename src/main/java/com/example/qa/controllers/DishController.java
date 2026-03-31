@@ -9,6 +9,7 @@ import com.example.qa.models.dto.dishes.DishDto;
 import com.example.qa.models.enums.*;
 import com.example.qa.services.DishService;
 import com.example.qa.services.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class DishController {
     final DishService dishService;
 
     @PostMapping("/create")
-    public ResponseEntity<CreateEntityResponse> createEntity(CreateDishRequest request){
+    public ResponseEntity<CreateEntityResponse> createEntity(@RequestBody @Valid CreateDishRequest request){
         return dishService.createEntity(request);
     }
 
@@ -37,18 +38,18 @@ public class DishController {
         return dishService.getEntities(category, flags, search);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DishDto> getEntity(UUID request){
+    @GetMapping("/get/{id}")
+    public ResponseEntity<DishDto> getEntity(@RequestParam(name = "id") UUID request){
         return dishService.getEntity(request);
     }
 
     @PutMapping("/change")
-    public ResponseEntity<ChangeEntityResponse> changeEntity(ChangeDishRequest request){
+    public ResponseEntity<ChangeEntityResponse> changeEntity(@RequestBody @Valid ChangeDishRequest request){
         return dishService.changeEntity(request);
     }
 
-    @GetMapping("/delete")
-    public ResponseEntity<DeleteEntityResponse> deleteEntity(UUID request){
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<DeleteEntityResponse> deleteEntity(@RequestParam(name = "id") UUID request){
         return dishService.deleteEntity(request);
     }
 }
