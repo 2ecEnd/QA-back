@@ -21,9 +21,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DishController {
 
+    final DishService dishService;
+
     @PostMapping("/create")
     public ResponseEntity<CreateEntityResponse> createEntity(CreateDishRequest request){
-        return ResponseEntity.internalServerError().build();
+        return dishService.createEntity(request);
     }
 
     @GetMapping
@@ -32,21 +34,21 @@ public class DishController {
             @PathVariable(name = "flags", required = false) List<Flag> flags,
             @PathVariable(name = "search", required = false) String search
     ) {
-        return ResponseEntity.internalServerError().build();
+        return dishService.getEntities(category, flags, search);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DishDto> getEntity(UUID request){
-        return ResponseEntity.internalServerError().build();
+        return dishService.getEntity(request);
     }
 
     @PutMapping("/change")
     public ResponseEntity<ChangeEntityResponse> changeEntity(ChangeDishRequest request){
-        return ResponseEntity.internalServerError().build();
+        return dishService.changeEntity(request);
     }
 
     @GetMapping("/delete")
     public ResponseEntity<DeleteEntityResponse> deleteEntity(UUID request){
-        return ResponseEntity.internalServerError().build();
+        return dishService.deleteEntity(request);
     }
 }
