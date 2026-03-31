@@ -35,7 +35,7 @@ public class Product {
     public String name;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "photos", nullable = false)
+    @Column(name = "photos", columnDefinition = "jsonb", nullable = false)
     @Size(min = 0, max = 5)
     public List<String> photos;
 

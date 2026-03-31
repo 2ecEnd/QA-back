@@ -27,7 +27,7 @@ public class ProductController {
 
     @PostMapping("/create")
     public ResponseEntity<CreateEntityResponse> createEntity(CreateProductRequest request){
-        return ResponseEntity.internalServerError().build();
+        return productService.createEntity(request);
     }
 
     @GetMapping
@@ -38,21 +38,25 @@ public class ProductController {
             @PathVariable(name = "category", required = false) String name,
             @PathVariable(name = "category", required = false) SortField sort
             ){
-        return ResponseEntity.internalServerError().build();
+        return productService.getEntities(category,
+                readinessDegree,
+                flags,
+                name,
+                sort);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getEntity(UUID request){
-        return ResponseEntity.internalServerError().build();
+        return productService.getEntity(request);
     }
 
     @PutMapping("/change")
     public ResponseEntity<ChangeEntityResponse> changeEntity(ChangeProductRequest request){
-        return ResponseEntity.internalServerError().build();
+        return productService.changeEntity(request);
     }
 
     @GetMapping("/delete")
     public ResponseEntity<DeleteEntityResponse> deleteEntity(UUID request){
-        return ResponseEntity.internalServerError().build();
+        return productService.deleteEntity(request);
     }
 }

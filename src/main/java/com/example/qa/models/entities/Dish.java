@@ -34,7 +34,7 @@ public class Dish {
     public String name;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "photos", nullable = false)
+    @Column(name = "photos", columnDefinition = "jsonb", nullable = false)
     @Size(min = 0, max = 5)
     public List<String> photos;
 
@@ -54,10 +54,10 @@ public class Dish {
     @Size(min = 0, max = 100)
     public Float carbohydrates;
 
-    @Column(name = "composition", nullable = false)
+    @JoinColumn(name = "composition", nullable = false)
     @Size(min = 1)
-    @ManyToMany
-    public List<Product> composition;
+    @OneToMany
+    public List<DishProduct> composition;
 
     @Column(name = "size", nullable = false)
     public Float size;

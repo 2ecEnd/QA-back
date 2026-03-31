@@ -75,7 +75,6 @@ public class DefaultProductService implements ProductService{
             String name,
             SortField sort
     ) {
-        var sorting = Sort.by(Sort.Direction.ASC, sort.toString());
 
         Specification<Product> specs = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -91,9 +90,17 @@ public class DefaultProductService implements ProductService{
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return ResponseEntity.ok(productRepository.findAll(specs, sorting).stream().map(
-                productMapper::toDto
-        ).toList());
+        return sort == null ?
+                ResponseEntity.ok(productRepository.findAll(specs)
+                                  .stream()
+                                  .map(productMapper::toDto)
+                                  .toList()) :
+                ResponseEntity.ok(productRepository.findAll(
+                        specs,
+                        Sort.by(Sort.Direction.ASC, sort.toString()))
+                                  .stream()
+                                  .map(productMapper::toDto)
+                                  .toList());
     }
 
     @Override
