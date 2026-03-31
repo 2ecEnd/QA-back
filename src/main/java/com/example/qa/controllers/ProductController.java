@@ -33,15 +33,15 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductDto>> getEntities(
             @PathVariable(name = "category", required = false) ProductCategory category,
-            @PathVariable(name = "category", required = false) ReadinessDegree readinessDegree,
-            @PathVariable(name = "category", required = false) List<Flag> flags,
-            @PathVariable(name = "category", required = false) String name,
-            @PathVariable(name = "category", required = false) SortField sort
-            ){
+            @PathVariable(name = "readinessDegree", required = false) ReadinessDegree readinessDegree,
+            @PathVariable(name = "flags", required = false) List<Flag> flags,
+            @PathVariable(name = "search", required = false) String search,
+            @PathVariable(name = "sort", required = false) SortField sort
+    ){
         return productService.getEntities(category,
                 readinessDegree,
                 flags,
-                name,
+                search,
                 sort);
     }
 

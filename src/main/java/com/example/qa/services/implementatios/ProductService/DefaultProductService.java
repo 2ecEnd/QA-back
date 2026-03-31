@@ -1,4 +1,4 @@
-package com.example.qa.services.implementatios.DishService;
+package com.example.qa.services.implementatios.ProductService;
 
 import com.example.qa.mappers.ProductMapper;
 import com.example.qa.models.dto.ChangeEntityResponse;
@@ -17,7 +17,6 @@ import com.example.qa.repositories.ProductRepository;
 import com.example.qa.services.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +35,7 @@ public class DefaultProductService implements ProductService{
 
     final ProductRepository productRepository;
     final DishProductRepository dishProductRepository;
+
     final ProductMapper productMapper;
 
     static final String path = "/products";
@@ -72,10 +72,9 @@ public class DefaultProductService implements ProductService{
             ProductCategory category,
             ReadinessDegree readinessDegree,
             List<Flag> flags,
-            String name,
+            String search,
             SortField sort
     ) {
-
         Specification<Product> specs = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (category != null) {

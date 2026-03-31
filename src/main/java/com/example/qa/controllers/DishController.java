@@ -6,6 +6,7 @@ import com.example.qa.models.dto.DeleteEntityResponse;
 import com.example.qa.models.dto.dishes.ChangeDishRequest;
 import com.example.qa.models.dto.dishes.CreateDishRequest;
 import com.example.qa.models.dto.dishes.DishDto;
+import com.example.qa.models.enums.*;
 import com.example.qa.services.DishService;
 import com.example.qa.services.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,11 @@ public class DishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DishDto>> getEntities(){
+    public ResponseEntity<List<DishDto>> getEntities(
+            @PathVariable(name = "category", required = false) DishCategory category,
+            @PathVariable(name = "flags", required = false) List<Flag> flags,
+            @PathVariable(name = "search", required = false) String search
+    ) {
         return ResponseEntity.internalServerError().build();
     }
 

@@ -2,11 +2,17 @@ package com.example.qa.models.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "dishes_products")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class DishProduct {
 
     @Id

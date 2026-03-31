@@ -1,6 +1,5 @@
 package com.example.qa.models.dto.dishes;
 
-import com.example.qa.models.dto.products.ProductDto;
 import com.example.qa.models.enums.DishCategory;
 import com.example.qa.models.enums.Flag;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,9 +9,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -21,7 +20,7 @@ import java.util.Set;
 public class ChangeDishRequest {
 
     @JsonProperty(value = "Id")
-    public String id;
+    public UUID id;
 
     @JsonProperty(value = "Name")
     public String name;
@@ -42,7 +41,7 @@ public class ChangeDishRequest {
     public Float carbohydrates;
 
     @JsonProperty(value = "Composition")
-    public List<ProductDto> composition;
+    public List<Ingridient> composition;
 
     @JsonProperty(value = "Size")
     public Float size;
