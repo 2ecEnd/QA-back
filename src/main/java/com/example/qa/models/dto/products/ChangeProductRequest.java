@@ -9,12 +9,13 @@ import lombok.Data;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 public class ChangeProductRequest {
 
     @JsonProperty(value = "Id")
-    public String id;
+    public UUID id;
 
     @JsonProperty(value = "Name")
     public String name;

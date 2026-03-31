@@ -26,6 +26,7 @@ import java.util.UUID;
 public class Dish {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     public UUID id;
 

@@ -6,6 +6,10 @@ import com.example.qa.models.dto.DeleteEntityResponse;
 import com.example.qa.models.dto.products.ChangeProductRequest;
 import com.example.qa.models.dto.products.CreateProductRequest;
 import com.example.qa.models.dto.products.ProductDto;
+import com.example.qa.models.enums.Flag;
+import com.example.qa.models.enums.ProductCategory;
+import com.example.qa.models.enums.ReadinessDegree;
+import com.example.qa.models.enums.SortField;
 import com.example.qa.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +31,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getEntities(){
+    public ResponseEntity<List<ProductDto>> getEntities(
+            @PathVariable(name = "category", required = false) ProductCategory category,
+            @PathVariable(name = "category", required = false) ReadinessDegree readinessDegree,
+            @PathVariable(name = "category", required = false) List<Flag> flags,
+            @PathVariable(name = "category", required = false) String name,
+            @PathVariable(name = "category", required = false) SortField sort
+            ){
         return ResponseEntity.internalServerError().build();
     }
 
