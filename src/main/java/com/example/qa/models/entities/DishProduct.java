@@ -14,13 +14,13 @@ public class DishProduct {
     @Column(name = "id", nullable = false)
     public UUID id;
 
-    @Column(name = "dish_id", nullable = false)
-    @OneToMany
-    public UUID dishId;
+    @JoinColumn(name = "dish_id", nullable = false)
+    @ManyToOne
+    public Dish dish;
 
-    @Column(name = "product_id", nullable = false)
-    @OneToMany
-    public UUID productId;
+    @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne
+    public Product product;
 
     @Column(name = "amount", nullable = false)
     @DecimalMin(value = "0.0", inclusive = false)

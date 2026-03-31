@@ -2,7 +2,7 @@ spring:
   application:
     name: QA
   datasource:
-    url: JDBC:postgresql://localhost:5432/qa
+    url: jdbc:postgresql://localhost:5432/qa
     driverClassName: org.postgresql.Driver
     username: postgres
     password: postgres
@@ -20,3 +20,4 @@ spring doc:
     operations-sorter: method
     tags-sorter: alpha
     try-it-out-enabled: true
+

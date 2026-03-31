@@ -20,8 +20,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DishController {
 
-    final DishService dishService;
-
     @PostMapping("/create")
     public ResponseEntity<CreateEntityResponse> createEntity(CreateDishRequest request){
         return ResponseEntity.internalServerError().build();
