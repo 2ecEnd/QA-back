@@ -89,17 +89,21 @@ public class DefaultProductService implements ProductService{
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return sort == null ?
-                ResponseEntity.ok(productRepository.findAll(specs)
+        var products = sort == null ?
+                productRepository.findAll(specs)
                                   .stream()
                                   .map(productMapper::toDto)
-                                  .toList()) :
-                ResponseEntity.ok(productRepository.findAll(
+                                  .toList() :
+                productRepository.findAll(
                         specs,
                         Sort.by(Sort.Direction.ASC, sort.toString()))
                                   .stream()
                                   .map(productMapper::toDto)
-                                  .toList());
+                                  .toList();
+
+        return ResponseEntity.ok(products.stream()
+                .filter(productDto -> productDto.name.toLowerCase().contains(search.toLowerCase()))
+                .toList());
     }
 
     @Override
