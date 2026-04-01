@@ -64,7 +64,7 @@ public class Dish {
 
     @JoinColumn(name = "composition", nullable = false)
     @Size(min = 1)
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     public List<DishProduct> composition;
 
     @Column(name = "size", nullable = false)

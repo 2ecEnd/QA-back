@@ -50,36 +50,7 @@ public class DefaultDishService implements DishService {
             }
         }
 
-        // Создание сущности
-        var entityBuilder = Dish.builder()
-                .name(request.name)
-                .photos(request.photos)
-                .calorieContent(request.calorieContent)
-                .proteins(request.proteins)
-                .fats(request.fats)
-                .carbohydrates(request.carbohydrates)
-                .composition(List.of())
-                .size(request.size);
-
-        if (request.flags != null) {
-            entityBuilder.flags(request.flags);
-        }
-
-        var entity = entityBuilder.build();
-        dishRepository.save(entity);
-
-        // Добавление состава сущности
-        request.composition.forEach(ingridient -> {
-            var dp = DishProduct.builder()
-                    .dish(entity)
-                    .product(productRepository.findById(ingridient.productId).get())
-                    .amount(ingridient.amount)
-                    .build();
-
-            dishProductRepository.save(dp);
-            entity.composition.add(dp);
-        });
-
+        var entity = dishMapper.toEntity(request);
         dishRepository.save(entity);
 
         return ResponseEntity.created(URI.create(path + "/" + entity.id.toString())).body(
