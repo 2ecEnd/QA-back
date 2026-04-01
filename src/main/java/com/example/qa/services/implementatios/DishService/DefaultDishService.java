@@ -105,9 +105,10 @@ public class DefaultDishService implements DishService {
         };
 
         return ResponseEntity.ok(dishRepository.findAll(specs)
-                                  .stream()
-                                  .map(dishMapper::toDto)
-                                  .toList());
+                .stream()
+                .map(dishMapper::toDto)
+                .filter(dishDto -> dishDto.name.toLowerCase().contains(search.toLowerCase()))
+                .toList());
     }
 
     @Override
