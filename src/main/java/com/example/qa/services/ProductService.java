@@ -26,9 +26,9 @@ public interface ProductService {
             String name,
             SortField sort);
 
-    ResponseEntity<ProductDto> getEntity(UUID request);
+    ResponseEntity<ProductDto> getEntity(UUID id);
 
-    ResponseEntity<ChangeEntityResponse> changeEntity(ChangeProductRequest request);
+    ResponseEntity<ChangeEntityResponse> changeEntity(UUID id, ChangeProductRequest request);
 
-    ResponseEntity<DeleteEntityResponse> deleteEntity(UUID request);
+    ResponseEntity<DeleteEntityResponse> deleteEntity(UUID id);
 }

@@ -33,11 +33,11 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductDto>> getEntities(
-            @PathVariable(name = "category", required = false) ProductCategory category,
-            @PathVariable(name = "readinessDegree", required = false) CookingNecessity cookingNecessity,
-            @PathVariable(name = "flags", required = false) List<Flag> flags,
-            @PathVariable(name = "search", required = false) String search,
-            @PathVariable(name = "sort", required = false) SortField sort
+            @RequestParam(name = "category", required = false) ProductCategory category,
+            @RequestParam(name = "readinessDegree", required = false) CookingNecessity cookingNecessity,
+            @RequestParam(name = "flags", required = false) List<Flag> flags,
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "sort", required = false) SortField sort
     ){
         return productService.getEntities(category,
                 cookingNecessity,
@@ -46,18 +46,20 @@ public class ProductController {
                 sort);
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<ProductDto> getEntity(@RequestParam(name = "id") UUID request){
-        return productService.getEntity(request);
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDto> getEntity(@PathVariable(name = "id") UUID id){
+        return productService.getEntity(id);
     }
 
-    @PutMapping("/change")
-    public ResponseEntity<ChangeEntityResponse> changeEntity(@RequestBody @Valid ChangeProductRequest request){
-        return productService.changeEntity(request);
+    @PatchMapping("/{id}/change")
+    public ResponseEntity<ChangeEntityResponse> changeEntity(
+            @PathVariable(name = "id") UUID id,
+            @RequestBody @Valid ChangeProductRequest request){
+        return productService.changeEntity(id, request);
     }
 
-    @GetMapping("/delete/{id}")
-    public ResponseEntity<DeleteEntityResponse> deleteEntity(@RequestParam(name = "id") UUID request){
-        return productService.deleteEntity(request);
+    @GetMapping("/{id}/delete")
+    public ResponseEntity<DeleteEntityResponse> deleteEntity(@PathVariable(name = "id") UUID id){
+        return productService.deleteEntity(id);
     }
 }

@@ -50,6 +50,5 @@ public class CreateProductRequest {
     public CookingNecessity cookingNecessity;
 
     @JsonProperty(value = "Flags")
-    @Nullable
     public Set<Flag> flags;
 }

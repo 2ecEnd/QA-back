@@ -22,9 +22,6 @@ import java.util.UUID;
 @PfcSum
 public class ChangeProductRequest {
 
-    @JsonProperty(value = "Id")
-    public UUID id;
-
     @JsonProperty(value = "Name")
     public String name;
 

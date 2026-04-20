@@ -33,12 +33,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DefaultProductService implements ProductService{
 
-    final ProductRepository productRepository;
-    final DishProductRepository dishProductRepository;
+    private final ProductRepository productRepository;
+    private final DishProductRepository dishProductRepository;
 
-    final ProductMapper productMapper;
+    private final ProductMapper productMapper;
 
-    static final String path = "/products";
+    private static final String path = "/products";
 
     @Override
     public ResponseEntity<CreateEntityResponse> createEntity(CreateProductRequest request) {
@@ -50,13 +50,11 @@ public class DefaultProductService implements ProductService{
                 .fats(request.fats)
                 .carbohydrates(request.carbohydrates)
                 .category(request.category)
-                .cookingNecessity(request.cookingNecessity);
+                .cookingNecessity(request.cookingNecessity)
+                .flags(request.flags);
 
         if (request.composition != null) {
             entityBuilder.composition(request.composition);
-        }
-        if (request.flags != null) {
-            entityBuilder.flags(request.flags);
         }
 
         var entity = entityBuilder.build();
@@ -107,16 +105,16 @@ public class DefaultProductService implements ProductService{
     }
 
     @Override
-    public ResponseEntity<ProductDto> getEntity(UUID request) {
-        var entity = productRepository.findById(request);
+    public ResponseEntity<ProductDto> getEntity(UUID id) {
+        var entity = productRepository.findById(id);
 
         return entity.map(product -> ResponseEntity.ok(productMapper.toDto(product)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Override
-    public ResponseEntity<ChangeEntityResponse> changeEntity(ChangeProductRequest request) {
-        var entity = productRepository.findById(request.id);
+    public ResponseEntity<ChangeEntityResponse> changeEntity(UUID id, ChangeProductRequest request) {
+        var entity = productRepository.findById(id);
 
         if (entity.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -139,16 +137,16 @@ public class DefaultProductService implements ProductService{
     }
 
     @Override
-    public ResponseEntity<DeleteEntityResponse> deleteEntity(UUID request) {
-        if (!productRepository.existsById(request)) {
+    public ResponseEntity<DeleteEntityResponse> deleteEntity(UUID id) {
+        if (!productRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
 
-        if (dishProductRepository.existsDishWithProduct(request)) {
+        if (dishProductRepository.existsDishWithProduct(id)) {
             return ResponseEntity.status(409).build();
         }
 
-        productRepository.deleteById(request);
+        productRepository.deleteById(id);
         return ResponseEntity.ok().body(new DeleteEntityResponse(1));
     }
 }

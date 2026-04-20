@@ -36,31 +36,33 @@ public class Product {
     public UUID id;
 
     @Column(name = "name", nullable = false)
+    @Size(min = 2)
     public String name;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "photos", columnDefinition = "jsonb", nullable = false)
+    @ElementCollection
+    @Column(name = "photos", nullable = true)
     @Size(min = 0, max = 5)
-    public List<String> photos;
+    @Builder.Default
+    public List<String> photos = null;
 
     @Column(name = "calorie_content", nullable = false)
     @DecimalMin("0")
-    public Float calorieContent;
+    public Double calorieContent;
 
     @Column(name = "proteins", nullable = false)
     @DecimalMin("0")
     @DecimalMax("100")
-    public Float proteins;
+    public Double proteins;
 
     @Column(name = "fats", nullable = false)
     @DecimalMin("0")
     @DecimalMax("100")
-    public Float fats;
+    public Double fats;
 
     @Column(name = "carbohydrates", nullable = false)
     @DecimalMin("0")
     @DecimalMax("100")
-    public Float carbohydrates;
+    public Double carbohydrates;
 
     @Column(name = "composition", nullable = true)
     @Builder.Default
@@ -74,10 +76,11 @@ public class Product {
     @Enumerated(EnumType.STRING)
     public CookingNecessity cookingNecessity;
 
+    @ElementCollection(targetClass = Flag.class)
     @Column(name = "flags", nullable = true)
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    public Set<Flag> flags = Collections.<Flag>emptySet();
+    public Set<Flag> flags = null;
 
     @Column(name = "creation_date", nullable = false)
     @CreatedDate
