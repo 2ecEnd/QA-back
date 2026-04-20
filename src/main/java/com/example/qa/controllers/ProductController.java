@@ -8,7 +8,7 @@ import com.example.qa.models.dto.products.CreateProductRequest;
 import com.example.qa.models.dto.products.ProductDto;
 import com.example.qa.models.enums.Flag;
 import com.example.qa.models.enums.ProductCategory;
-import com.example.qa.models.enums.ReadinessDegree;
+import com.example.qa.models.enums.CookingNecessity;
 import com.example.qa.models.enums.SortField;
 import com.example.qa.services.ProductService;
 import jakarta.validation.Valid;
@@ -34,13 +34,13 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductDto>> getEntities(
             @PathVariable(name = "category", required = false) ProductCategory category,
-            @PathVariable(name = "readinessDegree", required = false) ReadinessDegree readinessDegree,
+            @PathVariable(name = "readinessDegree", required = false) CookingNecessity cookingNecessity,
             @PathVariable(name = "flags", required = false) List<Flag> flags,
             @PathVariable(name = "search", required = false) String search,
             @PathVariable(name = "sort", required = false) SortField sort
     ){
         return productService.getEntities(category,
-                readinessDegree,
+                cookingNecessity,
                 flags,
                 search,
                 sort);

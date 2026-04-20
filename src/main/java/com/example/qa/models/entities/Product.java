@@ -2,7 +2,7 @@ package com.example.qa.models.entities;
 
 import com.example.qa.models.enums.ProductCategory;
 import com.example.qa.models.enums.Flag;
-import com.example.qa.models.enums.ReadinessDegree;
+import com.example.qa.models.enums.CookingNecessity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -15,7 +15,6 @@ import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -73,7 +72,7 @@ public class Product {
 
     @Column(name = "readiness_degree", nullable = false)
     @Enumerated(EnumType.STRING)
-    public ReadinessDegree readinessDegree;
+    public CookingNecessity cookingNecessity;
 
     @Column(name = "flags", nullable = true)
     @Enumerated(EnumType.STRING)

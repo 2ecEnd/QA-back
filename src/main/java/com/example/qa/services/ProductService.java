@@ -8,7 +8,7 @@ import com.example.qa.models.dto.products.CreateProductRequest;
 import com.example.qa.models.dto.products.ProductDto;
 import com.example.qa.models.enums.Flag;
 import com.example.qa.models.enums.ProductCategory;
-import com.example.qa.models.enums.ReadinessDegree;
+import com.example.qa.models.enums.CookingNecessity;
 import com.example.qa.models.enums.SortField;
 import org.springframework.http.ResponseEntity;
 
@@ -21,7 +21,7 @@ public interface ProductService {
 
     ResponseEntity<List<ProductDto>> getEntities(
             ProductCategory category,
-            ReadinessDegree readinessDegree,
+            CookingNecessity cookingNecessity,
             List<Flag> flags,
             String name,
             SortField sort);

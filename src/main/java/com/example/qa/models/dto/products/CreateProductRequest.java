@@ -3,7 +3,7 @@ package com.example.qa.models.dto.products;
 import com.example.qa.annotations.PfcSum;
 import com.example.qa.models.enums.Flag;
 import com.example.qa.models.enums.ProductCategory;
-import com.example.qa.models.enums.ReadinessDegree;
+import com.example.qa.models.enums.CookingNecessity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
@@ -46,8 +46,8 @@ public class CreateProductRequest {
     @JsonProperty(value = "Category")
     public ProductCategory category;
 
-    @JsonProperty(value = "ReadinessDegree")
-    public ReadinessDegree readinessDegree;
+    @JsonProperty(value = "CookingNecessity")
+    public CookingNecessity cookingNecessity;
 
     @JsonProperty(value = "Flags")
     @Nullable

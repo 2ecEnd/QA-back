@@ -10,7 +10,7 @@ import com.example.qa.models.dto.products.ProductDto;
 import com.example.qa.models.entities.Product;
 import com.example.qa.models.enums.Flag;
 import com.example.qa.models.enums.ProductCategory;
-import com.example.qa.models.enums.ReadinessDegree;
+import com.example.qa.models.enums.CookingNecessity;
 import com.example.qa.models.enums.SortField;
 import com.example.qa.repositories.DishProductRepository;
 import com.example.qa.repositories.ProductRepository;
@@ -50,7 +50,7 @@ public class DefaultProductService implements ProductService{
                 .fats(request.fats)
                 .carbohydrates(request.carbohydrates)
                 .category(request.category)
-                .readinessDegree(request.readinessDegree);
+                .cookingNecessity(request.cookingNecessity);
 
         if (request.composition != null) {
             entityBuilder.composition(request.composition);
@@ -70,7 +70,7 @@ public class DefaultProductService implements ProductService{
     @Override
     public ResponseEntity<List<ProductDto>> getEntities(
             ProductCategory category,
-            ReadinessDegree readinessDegree,
+            CookingNecessity cookingNecessity,
             List<Flag> flags,
             String search,
             SortField sort
@@ -80,8 +80,8 @@ public class DefaultProductService implements ProductService{
             if (category != null) {
                 predicates.add(cb.equal(root.get("category"), category));
             }
-            if (readinessDegree != null) {
-                predicates.add(cb.equal(root.get("readinessDegree"), readinessDegree));
+            if (cookingNecessity != null) {
+                predicates.add(cb.equal(root.get("readinessDegree"), cookingNecessity));
             }
             if (flags != null) {
                 predicates.add(cb.equal(root.get("flags"), flags));
@@ -130,7 +130,7 @@ public class DefaultProductService implements ProductService{
         entity.get().carbohydrates = request.carbohydrates;
         entity.get().composition = request.composition;
         entity.get().category = request.category;
-        entity.get().readinessDegree = request.readinessDegree;
+        entity.get().cookingNecessity = request.cookingNecessity;
         entity.get().flags = request.flags;
 
         productRepository.save(entity.get());

@@ -18,7 +18,7 @@ public class ProductMapper {
                 .carbohydrates(product.carbohydrates)
                 .composition(product.composition)
                 .category(product.category)
-                .readinessDegree(product.readinessDegree)
+                .cookingNecessity(product.cookingNecessity)
                 .flags(product.flags)
                 .build();
     }
@@ -34,7 +34,7 @@ public class ProductMapper {
                 .carbohydrates(product.carbohydrates)
                 .composition(product.composition)
                 .category(product.category)
-                .readinessDegree(product.readinessDegree)
+                .cookingNecessity(product.cookingNecessity)
                 .flags(product.flags)
                 .build();
     }
