@@ -1,6 +1,5 @@
 package com.example.qa.models.dto.dishes;
 
-import com.example.qa.annotations.PfcSum;
 import com.example.qa.models.enums.DishCategory;
 import com.example.qa.models.enums.Flag;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +16,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@PfcSum
 public class CreateDishRequest {
 
     @JsonProperty(value = "Name")
@@ -27,22 +25,22 @@ public class CreateDishRequest {
     public List<String> photos;
 
     @JsonProperty(value = "CalorieContent")
-    public Float calorieContent;
+    public Double calorieContent;
 
     @JsonProperty(value = "Proteins")
-    public Float proteins;
+    public Double proteins;
 
     @JsonProperty(value = "Fats")
-    public Float fats;
+    public Double fats;
 
     @JsonProperty(value = "Carbohydrates")
-    public Float carbohydrates;
+    public Double carbohydrates;
 
     @JsonProperty(value = "Composition")
     public List<Ingridient> composition;
 
     @JsonProperty(value = "Size")
-    public Float size;
+    public Double size;
 
     @JsonProperty(value = "Category")
     public DishCategory category;

@@ -1,6 +1,5 @@
 package com.example.qa.models.dto.products;
 
-import com.example.qa.annotations.PfcSum;
 import com.example.qa.models.enums.Flag;
 import com.example.qa.models.enums.ProductCategory;
 import com.example.qa.models.enums.CookingNecessity;
@@ -13,13 +12,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@PfcSum
 public class ChangeProductRequest {
 
     @JsonProperty(value = "Name")
@@ -29,16 +26,16 @@ public class ChangeProductRequest {
     public List<String> photos;
 
     @JsonProperty(value = "CalorieContent")
-    public Float calorieContent;
+    public Double calorieContent;
 
     @JsonProperty(value = "Proteins")
-    public Float proteins;
+    public Double proteins;
 
     @JsonProperty(value = "Fats")
-    public Float fats;
+    public Double fats;
 
     @JsonProperty(value = "Carbohydrates")
-    public Float carbohydrates;
+    public Double carbohydrates;
 
     @JsonProperty(value = "Composition")
     @Nullable

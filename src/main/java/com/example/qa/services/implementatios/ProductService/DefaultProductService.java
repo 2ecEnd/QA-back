@@ -43,25 +43,25 @@ public class DefaultProductService implements ProductService{
     @Override
     public ResponseEntity<CreateEntityResponse> createEntity(CreateProductRequest request) {
         var entityBuilder = Product.builder()
-                .name(request.name)
-                .photos(request.photos)
-                .calorieContent(request.calorieContent)
-                .proteins(request.proteins)
-                .fats(request.fats)
-                .carbohydrates(request.carbohydrates)
-                .category(request.category)
-                .cookingNecessity(request.cookingNecessity)
-                .flags(request.flags);
+                .name(request.getName())
+                .photos(request.getPhotos())
+                .calorieContent(request.getCalorieContent())
+                .proteins(request.getProteins())
+                .fats(request.getFats())
+                .carbohydrates(request.getCarbohydrates())
+                .category(request.getCategory())
+                .cookingNecessity(request.getCookingNecessity())
+                .flags(request.getFlags());
 
-        if (request.composition != null) {
-            entityBuilder.composition(request.composition);
+        if (request.getComposition() != null) {
+            entityBuilder.composition(request.getComposition());
         }
 
         var entity = entityBuilder.build();
         productRepository.save(entity);
 
-        return ResponseEntity.created(URI.create(path + "/" + entity.id.toString())).body(
-                new CreateEntityResponse(entity.id)
+        return ResponseEntity.created(URI.create(path + "/" + entity.getId().toString())).body(
+                new CreateEntityResponse(entity.getId())
         );
     }
 
@@ -100,7 +100,7 @@ public class DefaultProductService implements ProductService{
                                   .toList();
 
         return ResponseEntity.ok(products.stream()
-                .filter(productDto -> productDto.name.toLowerCase().contains(search.toLowerCase()))
+                .filter(productDto -> productDto.getName().toLowerCase().contains(search.toLowerCase()))
                 .toList());
     }
 
@@ -114,24 +114,25 @@ public class DefaultProductService implements ProductService{
 
     @Override
     public ResponseEntity<ChangeEntityResponse> changeEntity(UUID id, ChangeProductRequest request) {
-        var entity = productRepository.findById(id);
-
-        if (entity.isEmpty()) {
+        var entityOpt = productRepository.findById(id);
+        if (entityOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        entity.get().name = request.name;
-        entity.get().photos = request.photos;
-        entity.get().calorieContent = request.calorieContent;
-        entity.get().proteins = request.proteins;
-        entity.get().fats = request.fats;
-        entity.get().carbohydrates = request.carbohydrates;
-        entity.get().composition = request.composition;
-        entity.get().category = request.category;
-        entity.get().cookingNecessity = request.cookingNecessity;
-        entity.get().flags = request.flags;
+        var entity = entityOpt.get();
 
-        productRepository.save(entity.get());
+        entity.setName(request.name);
+        entity.setPhotos(request.photos);
+        entity.setCalorieContent(request.calorieContent);
+        entity.setProteins(request.proteins);
+        entity.setFats(request.fats);
+        entity.setCarbohydrates(request.carbohydrates);
+        entity.setComposition(request.composition);
+        entity.setCategory(request.category);
+        entity.setCookingNecessity(request.cookingNecessity);
+        entity.setFlags(request.flags);
+
+        productRepository.save(entity);
 
         return ResponseEntity.ok().body(new ChangeEntityResponse(1));
     }

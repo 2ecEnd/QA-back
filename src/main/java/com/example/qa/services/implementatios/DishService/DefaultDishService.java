@@ -53,8 +53,8 @@ public class DefaultDishService implements DishService {
         var entity = dishMapper.toEntity(request);
         dishRepository.save(entity);
 
-        return ResponseEntity.created(URI.create(path + "/" + entity.id.toString())).body(
-                new CreateEntityResponse(entity.id)
+        return ResponseEntity.created(URI.create(path + "/" + entity.getId().toString())).body(
+                new CreateEntityResponse(entity.getId())
         );
     }
 
@@ -78,7 +78,7 @@ public class DefaultDishService implements DishService {
         return ResponseEntity.ok(dishRepository.findAll(specs)
                 .stream()
                 .map(dishMapper::toDto)
-                .filter(dishDto -> dishDto.name.toLowerCase().contains(search.toLowerCase()))
+                .filter(dishDto -> dishDto.getName().toLowerCase().contains(search.toLowerCase()))
                 .toList());
     }
 
@@ -92,7 +92,7 @@ public class DefaultDishService implements DishService {
 
     @Override
     public ResponseEntity<ChangeEntityResponse> changeEntity(ChangeDishRequest request) {
-        var entityTmp = dishRepository.findById(request.id);
+        var entityTmp = dishRepository.findById(request.getId());
 
         if (entityTmp.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -101,23 +101,23 @@ public class DefaultDishService implements DishService {
         var entity = entityTmp.get();
 
         //TODO: добавить удаление ингредиентов
-        entity.name = request.name;
-        entity.photos = request.photos;
-        entity.calorieContent = request.calorieContent;
-        entity.proteins = request.proteins;
-        entity.fats = request.fats;
-        entity.carbohydrates = request.carbohydrates;
-        entity.composition = request.composition.stream()
+        entity.setName(request.getName());
+        entity.setPhotos(request.getPhotos());
+        entity.setCalorieContent(request.getCalorieContent());
+        entity.setProteins(request.getProteins());
+        entity.setFats(request.getFats());
+        entity.setCarbohydrates(request.getCarbohydrates());
+        entity.setComposition(request.getComposition().stream()
                 .map(ingridient -> DishProduct.builder()
                         .product(productRepository.findById(ingridient.productId).get())
                         .dish(entity)
                         .amount(ingridient.amount)
                         .build()
                 )
-                .toList();
-        entity.size = request.size;
-        entity.category = request.category;
-        entity.flags = request.flags;
+                .toList());
+        entity.setSize(request.getSize());
+        entity.setCategory(request.getCategory());
+        entity.setFlags(request.getFlags());
 
         dishRepository.save(entity);
 

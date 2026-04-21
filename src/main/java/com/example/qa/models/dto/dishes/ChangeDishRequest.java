@@ -1,6 +1,5 @@
 package com.example.qa.models.dto.dishes;
 
-import com.example.qa.annotations.PfcSum;
 import com.example.qa.models.enums.DishCategory;
 import com.example.qa.models.enums.Flag;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,40 +17,39 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@PfcSum
 public class ChangeDishRequest {
 
     @JsonProperty(value = "Id")
-    public UUID id;
+    private UUID id;
 
     @JsonProperty(value = "Name")
-    public String name;
+    private String name;
 
     @JsonProperty(value = "Photos")
-    public List<String> photos;
+    private List<String> photos;
 
     @JsonProperty(value = "CalorieContent")
-    public Float calorieContent;
+    private Double calorieContent;
 
     @JsonProperty(value = "Proteins")
-    public Float proteins;
+    private Double proteins;
 
     @JsonProperty(value = "Fats")
-    public Float fats;
+    private Double fats;
 
     @JsonProperty(value = "Carbohydrates")
-    public Float carbohydrates;
+    private Double carbohydrates;
 
     @JsonProperty(value = "Composition")
-    public List<Ingridient> composition;
+    private List<Ingridient> composition;
 
     @JsonProperty(value = "Size")
-    public Float size;
+    private Double size;
 
     @JsonProperty(value = "Category")
-    public DishCategory category;
+    private DishCategory category;
 
     @JsonProperty(value = "Flags")
     @Nullable
-    public Set<Flag> flags;
+    private Set<Flag> flags;
 }

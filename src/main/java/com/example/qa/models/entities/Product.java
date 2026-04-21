@@ -7,22 +7,19 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "products")
 @NoArgsConstructor
@@ -33,60 +30,73 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    public UUID id;
+    private UUID id;
 
     @Column(name = "name", nullable = false)
     @Size(min = 2)
-    public String name;
+    private String name;
 
     @ElementCollection
     @Column(name = "photos", nullable = true)
     @Size(min = 0, max = 5)
     @Builder.Default
-    public List<String> photos = null;
+    private List<String> photos = null;
 
     @Column(name = "calorie_content", nullable = false)
     @DecimalMin("0")
-    public Double calorieContent;
+    private Double calorieContent;
 
     @Column(name = "proteins", nullable = false)
     @DecimalMin("0")
     @DecimalMax("100")
-    public Double proteins;
+    private Double proteins;
 
     @Column(name = "fats", nullable = false)
     @DecimalMin("0")
     @DecimalMax("100")
-    public Double fats;
+    private Double fats;
 
     @Column(name = "carbohydrates", nullable = false)
     @DecimalMin("0")
     @DecimalMax("100")
-    public Double carbohydrates;
+    private Double carbohydrates;
 
     @Column(name = "composition", nullable = true)
     @Builder.Default
-    public String composition = null;
+    private String composition = null;
 
     @Column(name = "category", nullable = false)
     @Enumerated(EnumType.STRING)
-    public ProductCategory category;
+    private ProductCategory category;
 
     @Column(name = "readiness_degree", nullable = false)
     @Enumerated(EnumType.STRING)
-    public CookingNecessity cookingNecessity;
+    private CookingNecessity cookingNecessity;
 
     @ElementCollection(targetClass = Flag.class)
     @Column(name = "flags", nullable = true)
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    public Set<Flag> flags = null;
+    private Set<Flag> flags = null;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "created_at", nullable = false)
     @CreatedDate
-    public LocalDateTime creationDate;
+    private LocalDateTime createdAt;
 
-    @Column(name = "edit_date", nullable = true)
+    @Column(name = "updated_at", nullable = true)
     @LastModifiedDate
-    public LocalDateTime editDate;
+    private LocalDateTime updatedAt;
+
+    @JoinColumn(name = "dishProducts", nullable = false)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DishProduct> dishProducts;
+
+    @PrePersist
+    @PreUpdate
+    private void validateMacroSum() {
+        double sum = proteins + fats + carbohydrates;
+        if (sum > 100.0) {
+            throw new IllegalStateException("Сумма белков, жиров и углеводов на 100г не может превышать 100г");
+        }
+    }
 }

@@ -6,7 +6,6 @@ import com.example.qa.models.dto.dishes.DishDto;
 import com.example.qa.models.dto.dishes.Ingridient;
 import com.example.qa.models.entities.Dish;
 import com.example.qa.models.entities.DishProduct;
-import com.example.qa.repositories.DishRepository;
 import com.example.qa.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,44 +20,44 @@ public class DishMapper {
 
     public DishDto toDto(Dish dish) {
         return DishDto.builder()
-                .name(dish.name)
-                .photos(dish.photos)
-                .calorieContent(dish.calorieContent)
-                .proteins(dish.proteins)
-                .fats(dish.fats)
-                .carbohydrates(dish.carbohydrates)
-                .composition(dish.composition.stream()
+                .name(dish.getName())
+                .photos(dish.getPhotos())
+                .calorieContent(dish.getCalorieContent())
+                .proteins(dish.getProteins())
+                .fats(dish.getFats())
+                .carbohydrates(dish.getCarbohydrates())
+                .composition(dish.getComposition().stream()
                         .map(obj -> Ingridient.builder()
-                                .productId(obj.product.id)
-                                .productName(obj.product.name)
+                                .productId(obj.product.getId())
+                                .productName(obj.product.getName())
                                 .amount(obj.amount)
                                 .build())
                         .toList()
                 )
-                .size(dish.size)
-                .category(dish.category)
-                .flags(dish.flags)
-                .creationDate(dish.creationDate)
-                .editDate(dish.editDate)
+                .size(dish.getSize())
+                .category(dish.getCategory())
+                .flags(dish.getFlags())
+                .creationDate(dish.getCreatedAt())
+                .editDate(dish.getUpdatedAt())
                 .build();
     }
 
     public Dish toEntity(DishDto dish) {
         var entity = Dish.builder()
-                .name(dish.name)
-                .photos(dish.photos)
-                .calorieContent(dish.calorieContent)
-                .proteins(dish.proteins)
-                .fats(dish.fats)
-                .carbohydrates(dish.carbohydrates)
+                .name(dish.getName())
+                .photos(dish.getPhotos())
+                .calorieContent(dish.getCalorieContent())
+                .proteins(dish.getProteins())
+                .fats(dish.getFats())
+                .carbohydrates(dish.getCarbohydrates())
                 .composition(new ArrayList<>())
-                .size(dish.size)
-                .category(dish.category)
-                .flags(dish.flags == null ? null : dish.flags)
+                .size(dish.getSize())
+                .category(dish.getCategory())
+                .flags(dish.getFlags() == null ? null : dish.getFlags())
                 .build();
 
-        dish.composition.forEach(ingridient -> {
-            entity.composition.add(
+        dish.getComposition().forEach(ingridient -> {
+            entity.getComposition().add(
                     DishProduct.builder()
                     .product(productRepository.findById(ingridient.productId).get())
                     .dish(entity)
@@ -85,7 +84,7 @@ public class DishMapper {
                 .build();
 
         dish.composition.forEach(ingridient -> {
-            entity.composition.add(
+            entity.getComposition().add(
                     DishProduct.builder()
                             .product(productRepository.findById(ingridient.productId).get())
                             .dish(entity)
@@ -99,20 +98,20 @@ public class DishMapper {
 
     public Dish toEntity(ChangeDishRequest dish) {
         var entity = Dish.builder()
-                .name(dish.name)
-                .photos(dish.photos)
-                .calorieContent(dish.calorieContent)
-                .proteins(dish.proteins)
-                .fats(dish.fats)
-                .carbohydrates(dish.carbohydrates)
+                .name(dish.getName())
+                .photos(dish.getPhotos())
+                .calorieContent(dish.getCalorieContent())
+                .proteins(dish.getProteins())
+                .fats(dish.getFats())
+                .carbohydrates(dish.getCarbohydrates())
                 .composition(new ArrayList<>())
-                .size(dish.size)
-                .category(dish.category)
-                .flags(dish.flags == null ? null : dish.flags)
+                .size(dish.getSize())
+                .category(dish.getCategory())
+                .flags(dish.getFlags() == null ? null : dish.getFlags())
                 .build();
 
-        dish.composition.forEach(ingridient -> {
-            entity.composition.add(
+        dish.getComposition().forEach(ingridient -> {
+            entity.getComposition().add(
                     DishProduct.builder()
                             .product(productRepository.findById(ingridient.productId).get())
                             .dish(entity)
