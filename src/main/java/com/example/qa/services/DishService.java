@@ -26,7 +26,7 @@ public interface DishService {
 
     ResponseEntity<DishDto> getEntity(UUID request);
 
-    ResponseEntity<ChangeEntityResponse> changeEntity(ChangeDishRequest request);
+    ResponseEntity<ChangeEntityResponse> changeEntity(UUID id, ChangeDishRequest request);
 
-    ResponseEntity<DeleteEntityResponse> deleteEntity(UUID request);
+    ResponseEntity<DeleteEntityResponse> deleteEntity(UUID id);
 }

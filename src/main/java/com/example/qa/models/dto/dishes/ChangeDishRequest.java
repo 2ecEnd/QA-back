@@ -19,9 +19,6 @@ import java.util.UUID;
 @Builder
 public class ChangeDishRequest {
 
-    @JsonProperty(value = "Id")
-    private UUID id;
-
     @JsonProperty(value = "Name")
     private String name;
 

@@ -91,8 +91,8 @@ public class DefaultDishService implements DishService {
     }
 
     @Override
-    public ResponseEntity<ChangeEntityResponse> changeEntity(ChangeDishRequest request) {
-        var entityTmp = dishRepository.findById(request.getId());
+    public ResponseEntity<ChangeEntityResponse> changeEntity(UUID id, ChangeDishRequest request) {
+        var entityTmp = dishRepository.findById(id);
 
         if (entityTmp.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -125,12 +125,12 @@ public class DefaultDishService implements DishService {
     }
 
     @Override
-    public ResponseEntity<DeleteEntityResponse> deleteEntity(UUID request) {
-        if (!dishRepository.existsById(request)) {
+    public ResponseEntity<DeleteEntityResponse> deleteEntity(UUID id) {
+        if (!dishRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
 
-        productRepository.deleteById(request);
+        productRepository.deleteById(id);
         return ResponseEntity.ok().body(new DeleteEntityResponse(1));
     }
 }

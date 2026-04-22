@@ -22,6 +22,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class ProductController {
 
     final ProductService productService;
@@ -51,7 +52,7 @@ public class ProductController {
         return productService.getEntity(id);
     }
 
-    @PatchMapping("/{id}/change")
+    @PatchMapping("/{id}/update")
     public ResponseEntity<ChangeEntityResponse> changeEntity(
             @PathVariable(name = "id") UUID id,
             @RequestBody @Valid ChangeProductRequest request){
