@@ -94,7 +94,7 @@ public class DefaultProductService implements ProductService{
                                   .toList() :
                 productRepository.findAll(
                         specs,
-                        Sort.by(Sort.Direction.ASC, sort.toString()))
+                        Sort.by(Sort.Direction.ASC, sort.getFieldName()))
                                   .stream()
                                   .map(productMapper::toDto)
                                   .toList();
