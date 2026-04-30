@@ -27,6 +27,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -82,7 +83,10 @@ public class DefaultProductService implements ProductService{
                 predicates.add(cb.equal(root.get("cookingNecessity"), cookingNecessity));
             }
             if (flags != null) {
-                predicates.add(cb.equal(root.get("flags"), flags));
+                List<Predicate> memberPredicates = flags.stream()
+                        .map(flag -> cb.isMember(flag, root.get("flags")))
+                        .toList();
+                predicates.addAll(memberPredicates);
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
