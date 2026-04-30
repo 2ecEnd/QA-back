@@ -79,7 +79,7 @@ public class DefaultProductService implements ProductService{
                 predicates.add(cb.equal(root.get("category"), category));
             }
             if (cookingNecessity != null) {
-                predicates.add(cb.equal(root.get("readinessDegree"), cookingNecessity));
+                predicates.add(cb.equal(root.get("cookingNecessity"), cookingNecessity));
             }
             if (flags != null) {
                 predicates.add(cb.equal(root.get("flags"), flags));
@@ -99,9 +99,11 @@ public class DefaultProductService implements ProductService{
                                   .map(productMapper::toDto)
                                   .toList();
 
-        return ResponseEntity.ok(products.stream()
-                .filter(productDto -> productDto.getName().toLowerCase().contains(search.toLowerCase()))
-                .toList());
+        return search == null ?
+                ResponseEntity.ok(products) :
+                ResponseEntity.ok(products.stream()
+                                  .filter(productDto -> productDto.getName().toLowerCase().contains(search.toLowerCase()))
+                                  .toList());
     }
 
     @Override

@@ -32,15 +32,15 @@ public class DishController {
 
     @GetMapping
     public ResponseEntity<List<DishDto>> getEntities(
-            @PathVariable(name = "category", required = false) DishCategory category,
-            @PathVariable(name = "flags", required = false) List<Flag> flags,
-            @PathVariable(name = "search", required = false) String search
+            @RequestParam(name = "category", required = false) DishCategory category,
+            @RequestParam(name = "flags", required = false) List<Flag> flags,
+            @RequestParam(name = "search", required = false) String search
     ) {
         return dishService.getEntities(category, flags, search);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DishDto> getEntity(@RequestParam(name = "id") UUID request){
+    public ResponseEntity<DishDto> getEntity(@PathVariable(name = "id") UUID request){
         return dishService.getEntity(request);
     }
 
@@ -52,7 +52,7 @@ public class DishController {
     }
 
     @GetMapping("/{id}/delete")
-    public ResponseEntity<DeleteEntityResponse> deleteEntity(@RequestParam(name = "id") UUID request){
+    public ResponseEntity<DeleteEntityResponse> deleteEntity(@PathVariable(name = "id") UUID request){
         return dishService.deleteEntity(request);
     }
 }

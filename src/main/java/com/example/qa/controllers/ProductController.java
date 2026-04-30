@@ -40,11 +40,12 @@ public class ProductController {
             @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "sort", required = false) SortField sort
     ){
-        return productService.getEntities(category,
+        var result = productService.getEntities(category,
                 cookingNecessity,
                 flags,
                 search,
                 sort);
+        return result;
     }
 
     @GetMapping("/{id}")

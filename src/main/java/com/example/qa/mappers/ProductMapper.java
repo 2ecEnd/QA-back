@@ -20,6 +20,8 @@ public class ProductMapper {
                 .category(product.getCategory())
                 .cookingNecessity(product.getCookingNecessity())
                 .flags(product.getFlags())
+                .creationDate(product.getCreatedAt())
+                .editDate(product.getUpdatedAt())
                 .build();
     }
 
