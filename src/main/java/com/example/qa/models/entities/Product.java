@@ -87,10 +87,6 @@ public class Product {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @JoinColumn(name = "dishProducts", nullable = false)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DishProduct> dishProducts;
-
     @PrePersist
     @PreUpdate
     private void validateMacroSum() {

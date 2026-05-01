@@ -56,15 +56,15 @@ public class DishMapper {
                 .flags(dish.getFlags() == null ? null : dish.getFlags())
                 .build();
 
-        dish.getComposition().forEach(ingridient -> {
+        for (var ingredient : dish.getComposition()) {
             entity.getComposition().add(
                     DishProduct.builder()
-                            .product(productRepository.findById(ingridient.productId).get())
+                            .product(productRepository.findById(ingredient.productId).get())
                             .dish(entity)
-                            .amount(ingridient.amount)
+                            .amount(ingredient.amount)
                             .build()
             );
-        });
+        }
 
         return entity;
     }

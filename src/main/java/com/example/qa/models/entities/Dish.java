@@ -40,8 +40,9 @@ public class Dish {
     private String name;
 
     @ElementCollection
-    @Column(name = "photos", columnDefinition = "jsonb", nullable = false)
+    @Column(name = "photos", nullable = false)
     @Size(min = 0, max = 5)
+    @Builder.Default
     private List<String> photos = null;
 
     @Column(name = "calorie_content", nullable = false)
@@ -63,9 +64,8 @@ public class Dish {
     @DecimalMax("100")
     private Double carbohydrates;
 
-    @JoinColumn(name = "composition", nullable = false)
+    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
     @Size(min = 1)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DishProduct> composition;
 
     @Column(name = "size", nullable = false)

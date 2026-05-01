@@ -49,13 +49,8 @@ public class DefaultDishService implements DishService {
                 return ResponseEntity.notFound().build();
             }
         }
-        var entity = dishMapper.toEntity(request);
 
-        // Сохранение ингредиентов
-        var composition = entity.getComposition();
-        for (var ingridient : composition) {
-            dishProductRepository.save(ingridient);
-        }
+        var entity = dishMapper.toEntity(request);
         dishRepository.save(entity);
 
         return ResponseEntity.created(URI.create(path + "/" + entity.getId().toString())).body(
@@ -80,11 +75,16 @@ public class DefaultDishService implements DishService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return ResponseEntity.ok(dishRepository.findAll(specs)
-                .stream()
-                .map(dishMapper::toDto)
-                .filter(dishDto -> dishDto.getName().toLowerCase().contains(search.toLowerCase()))
-                .toList());
+        return search == null ?
+                ResponseEntity.ok(dishRepository.findAll(specs)
+                                  .stream()
+                                  .map(dishMapper::toDto)
+                                  .toList()) :
+                ResponseEntity.ok(dishRepository.findAll(specs)
+                                  .stream()
+                                  .map(dishMapper::toDto)
+                                  .filter(dishDto -> dishDto.getName().toLowerCase().contains(search.toLowerCase()))
+                                  .toList());
     }
 
     @Override
