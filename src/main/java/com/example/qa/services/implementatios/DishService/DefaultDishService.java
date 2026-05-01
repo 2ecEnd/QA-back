@@ -49,8 +49,13 @@ public class DefaultDishService implements DishService {
                 return ResponseEntity.notFound().build();
             }
         }
-
         var entity = dishMapper.toEntity(request);
+
+        // Сохранение ингредиентов
+        var composition = entity.getComposition();
+        for (var ingridient : composition) {
+            dishProductRepository.save(ingridient);
+        }
         dishRepository.save(entity);
 
         return ResponseEntity.created(URI.create(path + "/" + entity.getId().toString())).body(

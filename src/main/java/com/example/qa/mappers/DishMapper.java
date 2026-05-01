@@ -59,10 +59,10 @@ public class DishMapper {
         dish.getComposition().forEach(ingridient -> {
             entity.getComposition().add(
                     DishProduct.builder()
-                    .product(productRepository.findById(ingridient.productId).get())
-                    .dish(entity)
-                    .amount(ingridient.amount)
-                    .build()
+                            .product(productRepository.findById(ingridient.productId).get())
+                            .dish(entity)
+                            .amount(ingridient.amount)
+                            .build()
             );
         });
 
