@@ -38,8 +38,6 @@ public class DefaultProductService implements ProductService{
     private final ProductMapper productMapper;
     private final DishMapper dishMapper;
 
-    private static final String path = "/products";
-
     @Override
     public UUID createEntity(CreateProductRequest request) {
         var entity = productMapper.createRequestToEntity(request);

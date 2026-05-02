@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,7 +32,8 @@ public class ProductController {
     public ResponseEntity<CreateEntityResponse> createEntity(@RequestBody @Valid CreateProductRequest request){
         UUID productId = productService.createEntity(request);
 
-        return ResponseEntity.ok(new CreateEntityResponse(productId));
+        return ResponseEntity.created(URI.create("/products/" + productId.toString()))
+                .body(new CreateEntityResponse(productId));
     }
 
     @GetMapping

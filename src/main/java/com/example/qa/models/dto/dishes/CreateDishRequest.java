@@ -37,7 +37,7 @@ public class CreateDishRequest {
     public Double carbohydrates;
 
     @JsonProperty(value = "Composition")
-    public List<Ingridient> composition;
+    public List<Ingredient> composition;
 
     @JsonProperty(value = "Size")
     public Double size;

@@ -42,7 +42,7 @@ public class DishDto {
     private Double carbohydrates;
 
     @JsonProperty(value = "Composition")
-    private List<Ingridient> composition;
+    private List<Ingredient> composition;
 
     @JsonProperty(value = "Size")
     private Double size;

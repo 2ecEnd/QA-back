@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Ingridient {
+public class Ingredient {
 
     @JsonProperty(value = "ProductId")
     public UUID productId;

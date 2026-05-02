@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -38,7 +37,7 @@ public class ChangeDishRequest {
     private Double carbohydrates;
 
     @JsonProperty(value = "Composition")
-    private List<Ingridient> composition;
+    private List<Ingredient> composition;
 
     @JsonProperty(value = "Size")
     private Double size;

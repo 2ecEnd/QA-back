@@ -25,7 +25,7 @@ public class DishMapper {
                 .fats(dish.getFats())
                 .carbohydrates(dish.getCarbohydrates())
                 .composition(dish.getComposition().stream()
-                        .map(obj -> Ingridient.builder()
+                        .map(obj -> Ingredient.builder()
                                 .productId(obj.product.getId())
                                 .productName(obj.product.getName())
                                 .amount(obj.amount)
