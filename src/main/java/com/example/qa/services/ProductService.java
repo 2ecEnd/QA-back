@@ -5,6 +5,7 @@ import com.example.qa.models.dto.CreateEntityResponse;
 import com.example.qa.models.dto.DeleteEntityResponse;
 import com.example.qa.models.dto.products.ChangeProductRequest;
 import com.example.qa.models.dto.products.CreateProductRequest;
+import com.example.qa.models.dto.products.DeleteProductResponse;
 import com.example.qa.models.dto.products.ProductDto;
 import com.example.qa.models.enums.Flag;
 import com.example.qa.models.enums.ProductCategory;
@@ -30,5 +31,5 @@ public interface ProductService {
 
     ResponseEntity<ChangeEntityResponse> changeEntity(UUID id, ChangeProductRequest request);
 
-    ResponseEntity<DeleteEntityResponse> deleteEntity(UUID id);
+    ResponseEntity<DeleteProductResponse> deleteEntity(UUID id);
 }

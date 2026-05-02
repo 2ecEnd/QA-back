@@ -5,6 +5,7 @@ import com.example.qa.models.dto.CreateEntityResponse;
 import com.example.qa.models.dto.DeleteEntityResponse;
 import com.example.qa.models.dto.products.ChangeProductRequest;
 import com.example.qa.models.dto.products.CreateProductRequest;
+import com.example.qa.models.dto.products.DeleteProductResponse;
 import com.example.qa.models.dto.products.ProductDto;
 import com.example.qa.models.enums.Flag;
 import com.example.qa.models.enums.ProductCategory;
@@ -61,7 +62,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}/delete")
-    public ResponseEntity<DeleteEntityResponse> deleteEntity(@PathVariable(name = "id") UUID id){
+    public ResponseEntity<DeleteProductResponse> deleteEntity(@PathVariable(name = "id") UUID id){
         return productService.deleteEntity(id);
     }
 }

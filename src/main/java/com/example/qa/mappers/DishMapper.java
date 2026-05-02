@@ -1,9 +1,6 @@
 package com.example.qa.mappers;
 
-import com.example.qa.models.dto.dishes.ChangeDishRequest;
-import com.example.qa.models.dto.dishes.CreateDishRequest;
-import com.example.qa.models.dto.dishes.DishDto;
-import com.example.qa.models.dto.dishes.Ingridient;
+import com.example.qa.models.dto.dishes.*;
 import com.example.qa.models.entities.Dish;
 import com.example.qa.models.entities.DishProduct;
 import com.example.qa.repositories.ProductRepository;
@@ -20,6 +17,7 @@ public class DishMapper {
 
     public DishDto toDto(Dish dish) {
         return DishDto.builder()
+                .id(dish.getId())
                 .name(dish.getName())
                 .photos(dish.getPhotos())
                 .calorieContent(dish.getCalorieContent())
@@ -121,5 +119,12 @@ public class DishMapper {
         });
 
         return entity;
+    }
+
+    public DishShortInfoDto toShortInfo(Dish dish) {
+        return DishShortInfoDto.builder()
+                .id(dish.getId())
+                .name(dish.getName())
+                .build();
     }
 }

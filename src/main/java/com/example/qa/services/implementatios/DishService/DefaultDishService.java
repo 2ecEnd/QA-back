@@ -105,25 +105,28 @@ public class DefaultDishService implements DishService {
 
         var entity = entityTmp.get();
 
-        //TODO: добавить удаление ингредиентов
         entity.setName(request.getName());
         entity.setPhotos(request.getPhotos());
         entity.setCalorieContent(request.getCalorieContent());
         entity.setProteins(request.getProteins());
         entity.setFats(request.getFats());
         entity.setCarbohydrates(request.getCarbohydrates());
-        entity.setComposition(request.getComposition().stream()
+        entity.setSize(request.getSize());
+        entity.setCategory(request.getCategory());
+        entity.setFlags(request.getFlags());
+
+        var currentComposition = entity.getComposition();
+        currentComposition.clear();
+
+        var newComposition = request.getComposition().stream()
                 .map(ingridient -> DishProduct.builder()
                         .product(productRepository.findById(ingridient.productId).get())
                         .dish(entity)
                         .amount(ingridient.amount)
                         .build()
                 )
-                .toList());
-        entity.setSize(request.getSize());
-        entity.setCategory(request.getCategory());
-        entity.setFlags(request.getFlags());
-
+                .toList();
+        currentComposition.addAll(newComposition);
         dishRepository.save(entity);
 
         return ResponseEntity.ok().body(new ChangeEntityResponse(1));
@@ -135,7 +138,7 @@ public class DefaultDishService implements DishService {
             return ResponseEntity.notFound().build();
         }
 
-        productRepository.deleteById(id);
+        dishRepository.deleteById(id);
         return ResponseEntity.ok().body(new DeleteEntityResponse(1));
     }
 }

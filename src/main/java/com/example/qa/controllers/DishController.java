@@ -36,7 +36,8 @@ public class DishController {
             @RequestParam(name = "flags", required = false) List<Flag> flags,
             @RequestParam(name = "search", required = false) String search
     ) {
-        return dishService.getEntities(category, flags, search);
+        var result = dishService.getEntities(category, flags, search);
+        return result;
     }
 
     @GetMapping("/{id}")

@@ -1,11 +1,12 @@
 package com.example.qa.services.implementatios.ProductService;
 
+import com.example.qa.mappers.DishMapper;
 import com.example.qa.mappers.ProductMapper;
 import com.example.qa.models.dto.ChangeEntityResponse;
 import com.example.qa.models.dto.CreateEntityResponse;
-import com.example.qa.models.dto.DeleteEntityResponse;
 import com.example.qa.models.dto.products.ChangeProductRequest;
 import com.example.qa.models.dto.products.CreateProductRequest;
+import com.example.qa.models.dto.products.DeleteProductResponse;
 import com.example.qa.models.dto.products.ProductDto;
 import com.example.qa.models.entities.Product;
 import com.example.qa.models.enums.Flag;
@@ -27,7 +28,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -38,6 +38,7 @@ public class DefaultProductService implements ProductService{
     private final DishProductRepository dishProductRepository;
 
     private final ProductMapper productMapper;
+    private final DishMapper dishMapper;
 
     private static final String path = "/products";
 
@@ -144,16 +145,25 @@ public class DefaultProductService implements ProductService{
     }
 
     @Override
-    public ResponseEntity<DeleteEntityResponse> deleteEntity(UUID id) {
+    public ResponseEntity<DeleteProductResponse> deleteEntity(UUID id) {
         if (!productRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
 
-        if (dishProductRepository.existsDishWithProduct(id)) {
-            return ResponseEntity.status(409).build();
+        var dishesWithProduct = dishProductRepository.getDishesWithProduct(id).stream()
+                .map(dishMapper::toShortInfo)
+                .toList();
+        if (!dishesWithProduct.isEmpty()) {
+            return ResponseEntity.status(409).body(DeleteProductResponse.builder()
+                    .acknowledge(false)
+                    .dishes(dishesWithProduct)
+                    .build());
         }
 
         productRepository.deleteById(id);
-        return ResponseEntity.ok().body(new DeleteEntityResponse(1));
+        return ResponseEntity.ok().body(DeleteProductResponse.builder()
+                .acknowledge(true)
+                .dishes(null)
+                .build());
     }
 }
