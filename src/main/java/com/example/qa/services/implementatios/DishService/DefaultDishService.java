@@ -119,10 +119,10 @@ public class DefaultDishService implements DishService {
     @Override
     public DeleteDishAcknowledge deleteEntity(UUID id) {
         if (!dishRepository.existsById(id)) {
-            return new DeleteDishAcknowledge(0);
+            return new DeleteDishAcknowledge(false);
         }
 
         dishRepository.deleteById(id);
-        return new DeleteDishAcknowledge(1);
+        return new DeleteDishAcknowledge(true);
     }
 }
