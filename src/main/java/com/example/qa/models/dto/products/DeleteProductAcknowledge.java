@@ -14,12 +14,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DeleteProductResponse {
+public class DeleteProductAcknowledge {
 
     @JsonProperty("Acknowledge")
     private Boolean acknowledge;
 
     @JsonProperty("Dishes")
     @Nullable
-    private List<DishShortInfoDto> dishes;
+    @Builder.Default
+    private List<DishShortInfoDto> dishes = null;
 }

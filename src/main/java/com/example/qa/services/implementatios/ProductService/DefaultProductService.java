@@ -2,11 +2,10 @@ package com.example.qa.services.implementatios.ProductService;
 
 import com.example.qa.mappers.DishMapper;
 import com.example.qa.mappers.ProductMapper;
-import com.example.qa.models.dto.ChangeEntityResponse;
-import com.example.qa.models.dto.CreateEntityResponse;
+import com.example.qa.models.dto.dishes.DishShortInfoDto;
 import com.example.qa.models.dto.products.ChangeProductRequest;
 import com.example.qa.models.dto.products.CreateProductRequest;
-import com.example.qa.models.dto.products.DeleteProductResponse;
+import com.example.qa.models.dto.products.DeleteProductAcknowledge;
 import com.example.qa.models.dto.products.ProductDto;
 import com.example.qa.models.entities.Product;
 import com.example.qa.models.enums.Flag;
@@ -20,13 +19,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.criteria.Predicate;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -43,32 +41,15 @@ public class DefaultProductService implements ProductService{
     private static final String path = "/products";
 
     @Override
-    public ResponseEntity<CreateEntityResponse> createEntity(CreateProductRequest request) {
-        var entityBuilder = Product.builder()
-                .name(request.getName())
-                .photos(request.getPhotos())
-                .calorieContent(request.getCalorieContent())
-                .proteins(request.getProteins())
-                .fats(request.getFats())
-                .carbohydrates(request.getCarbohydrates())
-                .category(request.getCategory())
-                .cookingNecessity(request.getCookingNecessity())
-                .flags(request.getFlags());
-
-        if (request.getComposition() != null) {
-            entityBuilder.composition(request.getComposition());
-        }
-
-        var entity = entityBuilder.build();
+    public UUID createEntity(CreateProductRequest request) {
+        var entity = productMapper.createRequestToEntity(request);
         productRepository.save(entity);
 
-        return ResponseEntity.created(URI.create(path + "/" + entity.getId().toString())).body(
-                new CreateEntityResponse(entity.getId())
-        );
+        return entity.getId();
     }
 
     @Override
-    public ResponseEntity<List<ProductDto>> getEntities(
+    public List<ProductDto> getEntities(
             ProductCategory category,
             CookingNecessity cookingNecessity,
             List<Flag> flags,
@@ -92,78 +73,75 @@ public class DefaultProductService implements ProductService{
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        var products = sort == null ?
+        List<ProductDto> products = sort == null ?
                 productRepository.findAll(specs)
-                                  .stream()
-                                  .map(productMapper::toDto)
-                                  .toList() :
-                productRepository.findAll(
-                        specs,
-                        Sort.by(Sort.Direction.ASC, sort.getFieldName()))
-                                  .stream()
-                                  .map(productMapper::toDto)
-                                  .toList();
+                                    .stream()
+                                    .map(productMapper::entityToDto)
+                                    .toList() :
+                productRepository.findAll(specs, Sort.by(Sort.Direction.ASC, sort.getFieldName()))
+                                    .stream()
+                                    .map(productMapper::entityToDto)
+                                    .toList();
 
         return search == null ?
-                ResponseEntity.ok(products) :
-                ResponseEntity.ok(products.stream()
-                                  .filter(productDto -> productDto.getName().toLowerCase().contains(search.toLowerCase()))
-                                  .toList());
+                products :
+                products.stream()
+                    .filter(productDto -> productDto.getName().toLowerCase().contains(search.toLowerCase()))
+                    .toList();
     }
 
     @Override
-    public ResponseEntity<ProductDto> getEntity(UUID id) {
-        var entity = productRepository.findById(id);
+    public ProductDto getEntity(UUID id) {
+        Optional<Product> entity = productRepository.findById(id);
 
-        return entity.map(product -> ResponseEntity.ok(productMapper.toDto(product)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return entity.map(productMapper::entityToDto).orElse(null);
     }
 
     @Override
-    public ResponseEntity<ChangeEntityResponse> changeEntity(UUID id, ChangeProductRequest request) {
-        var entityOpt = productRepository.findById(id);
-        if (entityOpt.isEmpty()) {
-            return ResponseEntity.notFound().build();
+    public Integer changeEntity(UUID id, ChangeProductRequest request) {
+        Optional<Product> productTmp = productRepository.findById(id);
+        if (productTmp.isEmpty()) {
+            return 0;
         }
+        Product product = productTmp.get();
 
-        var entity = entityOpt.get();
+        product.setName(request.name);
+        product.setPhotos(request.photos);
+        product.setCalorieContent(request.calorieContent);
+        product.setProteins(request.proteins);
+        product.setFats(request.fats);
+        product.setCarbohydrates(request.carbohydrates);
+        product.setComposition(request.composition);
+        product.setCategory(request.category);
+        product.setCookingNecessity(request.cookingNecessity);
+        product.setFlags(request.flags);
 
-        entity.setName(request.name);
-        entity.setPhotos(request.photos);
-        entity.setCalorieContent(request.calorieContent);
-        entity.setProteins(request.proteins);
-        entity.setFats(request.fats);
-        entity.setCarbohydrates(request.carbohydrates);
-        entity.setComposition(request.composition);
-        entity.setCategory(request.category);
-        entity.setCookingNecessity(request.cookingNecessity);
-        entity.setFlags(request.flags);
+        productRepository.save(product);
 
-        productRepository.save(entity);
-
-        return ResponseEntity.ok().body(new ChangeEntityResponse(1));
+        return 1;
     }
 
     @Override
-    public ResponseEntity<DeleteProductResponse> deleteEntity(UUID id) {
+    public DeleteProductAcknowledge deleteEntity(UUID id) {
         if (!productRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+            return DeleteProductAcknowledge.builder()
+                    .acknowledge(false)
+                    .build();
         }
 
-        var dishesWithProduct = dishProductRepository.getDishesWithProduct(id).stream()
+        List<DishShortInfoDto> dishesWithProduct = dishProductRepository.getDishesWithProduct(id).stream()
                 .map(dishMapper::toShortInfo)
                 .toList();
         if (!dishesWithProduct.isEmpty()) {
-            return ResponseEntity.status(409).body(DeleteProductResponse.builder()
+            return DeleteProductAcknowledge.builder()
                     .acknowledge(false)
                     .dishes(dishesWithProduct)
-                    .build());
+                    .build();
         }
 
         productRepository.deleteById(id);
-        return ResponseEntity.ok().body(DeleteProductResponse.builder()
+        return DeleteProductAcknowledge.builder()
                 .acknowledge(true)
-                .dishes(null)
-                .build());
+                .build();
     }
 }
