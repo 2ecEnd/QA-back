@@ -69,7 +69,7 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private ProductCategory category;
 
-    @Column(name = "readiness_degree", nullable = false)
+    @Column(name = "cooking_necessity", nullable = false)
     @Enumerated(EnumType.STRING)
     private CookingNecessity cookingNecessity;
 
@@ -84,11 +84,20 @@ public class Product {
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = true)
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    @Builder.Default
+    private LocalDateTime updatedAt = null;
+
+    @PreUpdate
+    private void onPreUpdate() {
+        validateMacroSum();
+        updatedAt = LocalDateTime.now();
+    }
 
     @PrePersist
-    @PreUpdate
+    private void onPrePersist() {
+        validateMacroSum();
+    }
+
     private void validateMacroSum() {
         double sum = proteins + fats + carbohydrates;
         if (sum > 100.0) {

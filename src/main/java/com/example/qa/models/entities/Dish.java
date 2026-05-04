@@ -51,17 +51,14 @@ public class Dish {
 
     @Column(name = "proteins", nullable = false)
     @DecimalMin("0")
-    @DecimalMax("100")
     private Double proteins;
 
     @Column(name = "fats", nullable = false)
     @DecimalMin("0")
-    @DecimalMax("100")
     private Double fats;
 
     @Column(name = "carbohydrates", nullable = false)
     @DecimalMin("0")
-    @DecimalMax("100")
     private Double carbohydrates;
 
     @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -86,21 +83,10 @@ public class Dish {
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = true)
-    @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @PrePersist
     @PreUpdate
-    private void validateMacroPer100g() {
-        if (size == null || size <= 0) {
-            return;
-        }
-
-        double proteins100 = (proteins / size) * 100;
-        double fats100 = (fats / size) * 100;
-        double carbs100 = (carbohydrates / size) * 100;
-        if (proteins100 + fats100 + carbs100 > 100.0) {
-            throw new IllegalStateException("Сумма БЖУ на 100г блюда не может превышать 100г");
-        }
+    private void onPreUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 }

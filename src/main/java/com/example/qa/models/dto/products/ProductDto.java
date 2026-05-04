@@ -48,7 +48,7 @@ public class ProductDto {
     @JsonProperty(value = "Category")
     private ProductCategory category;
 
-    @JsonProperty(value = "ReadinessDegree")
+    @JsonProperty(value = "CookingNecessity")
     private CookingNecessity cookingNecessity;
 
     @JsonProperty(value = "Flags")

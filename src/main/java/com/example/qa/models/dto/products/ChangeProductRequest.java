@@ -44,7 +44,7 @@ public class ChangeProductRequest {
     @JsonProperty(value = "Category")
     public ProductCategory category;
 
-    @JsonProperty(value = "ReadinessDegree")
+    @JsonProperty(value = "CookingNecessity")
     public CookingNecessity cookingNecessity;
 
     @JsonProperty(value = "Flags")
