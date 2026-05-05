@@ -13,6 +13,7 @@ import com.example.qa.repositories.DishProductRepository;
 import com.example.qa.repositories.DishRepository;
 import com.example.qa.repositories.ProductRepository;
 import com.example.qa.services.DishService;
+import com.example.qa.services.FileStorageService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,11 +28,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DefaultDishService implements DishService {
 
-    final DishRepository dishRepository;
-    final ProductRepository productRepository;
-    final DishProductRepository dishProductRepository;
+    private final DishRepository dishRepository;
+    private final ProductRepository productRepository;
+    private final FileStorageService fileStorageService;
 
-    final DishMapper dishMapper;
+    private final DishMapper dishMapper;
 
     @Override
     public UUID createEntity(CreateDishRequest request) {
@@ -90,7 +91,8 @@ public class DefaultDishService implements DishService {
         if (dishTmp.isEmpty()) {
             return 0;
         }
-        var dish = dishTmp.get();
+        Dish dish = dishTmp.get();
+        List<String> oldPhotos = dish.getPhotos();
 
         dish.setName(request.getName());
         dish.setPhotos(request.getPhotos());
@@ -114,6 +116,12 @@ public class DefaultDishService implements DishService {
                 )
                 .toList();
         currentComposition.addAll(newComposition);
+
+        if (oldPhotos != dish.getPhotos()) {
+            oldPhotos.stream()
+                    .filter(url -> !request.getPhotos().contains(url))
+                    .forEach(fileStorageService::deleteFile);
+        }
         dishRepository.save(dish);
 
         return 1;
@@ -121,10 +129,12 @@ public class DefaultDishService implements DishService {
 
     @Override
     public DeleteDishAcknowledge deleteEntity(UUID id) {
-        if (!dishRepository.existsById(id)) {
+        Optional<Dish> dishOpt = dishRepository.findById(id);
+        if (dishOpt.isEmpty()) {
             return new DeleteDishAcknowledge(false);
         }
 
+        dishOpt.get().getPhotos().forEach(fileStorageService::deleteFile);
         dishRepository.deleteById(id);
         return new DeleteDishAcknowledge(true);
     }

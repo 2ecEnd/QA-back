@@ -61,7 +61,7 @@ public class Dish {
     @DecimalMin("0")
     private Double carbohydrates;
 
-    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Size(min = 1)
     private List<DishProduct> composition;
 

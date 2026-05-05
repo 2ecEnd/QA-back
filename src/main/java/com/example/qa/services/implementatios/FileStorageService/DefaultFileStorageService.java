@@ -1,6 +1,7 @@
 package com.example.qa.services.implementatios.FileStorageService;
 
 import com.example.qa.services.FileStorageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +15,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class DefaultFileStorageService implements FileStorageService {
 
     @Value("${app.upload.dir}")
@@ -43,6 +45,19 @@ public class DefaultFileStorageService implements FileStorageService {
                     .toUriString();
         } catch (IOException e) {
             throw new RuntimeException("Could not store file: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void deleteFile(String fileUrl) {
+        if (fileUrl == null || fileUrl.isBlank()) return;
+        try {
+            String fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+            Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
+
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            log.warn("Could not delete file {}: {}", fileUrl, e.getMessage());
         }
     }
 }

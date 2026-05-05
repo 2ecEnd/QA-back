@@ -14,6 +14,7 @@ import com.example.qa.models.enums.CookingNecessity;
 import com.example.qa.models.enums.SortField;
 import com.example.qa.repositories.DishProductRepository;
 import com.example.qa.repositories.ProductRepository;
+import com.example.qa.services.FileStorageService;
 import com.example.qa.services.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class DefaultProductService implements ProductService{
 
     private final ProductRepository productRepository;
     private final DishProductRepository dishProductRepository;
+    private final FileStorageService fileStorageService;
 
     private final ProductMapper productMapper;
     private final DishMapper dishMapper;
@@ -102,6 +104,7 @@ public class DefaultProductService implements ProductService{
             return 0;
         }
         Product product = productTmp.get();
+        List<String> oldPhotos = product.getPhotos();
 
         product.setName(request.name);
         product.setPhotos(request.photos);
@@ -114,6 +117,11 @@ public class DefaultProductService implements ProductService{
         product.setCookingNecessity(request.cookingNecessity);
         product.setFlags(request.flags);
 
+        if (oldPhotos != product.getPhotos()) {
+            oldPhotos.stream()
+                    .filter(url -> !request.getPhotos().contains(url))
+                    .forEach(fileStorageService::deleteFile);
+        }
         productRepository.save(product);
 
         return 1;
@@ -121,7 +129,8 @@ public class DefaultProductService implements ProductService{
 
     @Override
     public DeleteProductAcknowledge deleteEntity(UUID id) {
-        if (!productRepository.existsById(id)) {
+        Optional<Product> productOpt = productRepository.findById(id);
+        if (productOpt.isEmpty()) {
             return DeleteProductAcknowledge.builder()
                     .acknowledge(false)
                     .build();
@@ -137,6 +146,7 @@ public class DefaultProductService implements ProductService{
                     .build();
         }
 
+        productOpt.get().getPhotos().forEach(fileStorageService::deleteFile);
         productRepository.deleteById(id);
         return DeleteProductAcknowledge.builder()
                 .acknowledge(true)
