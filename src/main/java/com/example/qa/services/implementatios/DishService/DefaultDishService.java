@@ -60,7 +60,10 @@ public class DefaultDishService implements DishService {
                 predicates.add(cb.equal(root.get("category"), category));
             }
             if (flags != null) {
-                predicates.add(cb.equal(root.get("flags"), flags));
+                List<Predicate> memberPredicates = flags.stream()
+                        .map(flag -> cb.isMember(flag, root.get("flags")))
+                        .toList();
+                predicates.addAll(memberPredicates);
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
