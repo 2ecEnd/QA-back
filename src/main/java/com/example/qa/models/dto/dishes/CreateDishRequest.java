@@ -22,6 +22,7 @@ public class CreateDishRequest {
     public String name;
 
     @JsonProperty(value = "Photos")
+    @Nullable
     public List<String> photos;
 
     @JsonProperty(value = "CalorieContent")

@@ -1,5 +1,6 @@
 package com.example.qa.models.dto.products;
 
+import com.example.qa.annotations.ValidPfcSum;
 import com.example.qa.models.enums.Flag;
 import com.example.qa.models.enums.ProductCategory;
 import com.example.qa.models.enums.CookingNecessity;
@@ -17,12 +18,14 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ValidPfcSum
 public class CreateProductRequest {
 
     @JsonProperty(value = "Name")
     private String name;
 
     @JsonProperty(value = "Photos")
+    @Nullable
     private List<String> photos;
 
     @JsonProperty(value = "CalorieContent")
@@ -48,5 +51,6 @@ public class CreateProductRequest {
     private CookingNecessity cookingNecessity;
 
     @JsonProperty(value = "Flags")
+    @Nullable
     private Set<Flag> flags;
 }
