@@ -4,6 +4,7 @@ import com.example.qa.models.enums.DishCategory;
 import com.example.qa.models.enums.Flag;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,15 +27,19 @@ public class CreateDishRequest {
     public List<String> photos;
 
     @JsonProperty(value = "CalorieContent")
+    @DecimalMin("0")
     public Double calorieContent;
 
     @JsonProperty(value = "Proteins")
+    @DecimalMin("0")
     public Double proteins;
 
     @JsonProperty(value = "Fats")
+    @DecimalMin("0")
     public Double fats;
 
     @JsonProperty(value = "Carbohydrates")
+    @DecimalMin("0")
     public Double carbohydrates;
 
     @JsonProperty(value = "Composition")
