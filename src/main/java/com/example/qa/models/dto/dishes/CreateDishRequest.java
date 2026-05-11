@@ -5,6 +5,7 @@ import com.example.qa.models.enums.Flag;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,11 +21,13 @@ import java.util.Set;
 public class CreateDishRequest {
 
     @JsonProperty(value = "Name")
-    public String name;
+    @Size(min = 2)
+    private String name;
 
     @JsonProperty(value = "Photos")
     @Nullable
-    public List<String> photos;
+    @Size(max = 5)
+    private List<String> photos;
 
     @JsonProperty(value = "CalorieContent")
     @DecimalMin("0")
