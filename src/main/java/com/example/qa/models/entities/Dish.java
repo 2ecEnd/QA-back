@@ -40,7 +40,7 @@ public class Dish {
     private String name;
 
     @ElementCollection
-    @Column(name = "photos", nullable = false)
+    @Column(name = "photos", nullable = true)
     @Size(min = 0, max = 5)
     @Builder.Default
     private List<String> photos = null;
@@ -76,7 +76,7 @@ public class Dish {
     @Column(name = "flags", nullable = true)
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Set<Flag> flags = Collections.<Flag>emptySet();
+    private Set<Flag> flags = null;
 
     @Column(name = "created_at", nullable = false)
     @CreatedDate

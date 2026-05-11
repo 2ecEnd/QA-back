@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,10 +22,12 @@ import java.util.Set;
 public class ChangeDishRequest {
 
     @JsonProperty(value = "Name")
+    @Size(min = 2)
     private String name;
 
     @JsonProperty(value = "Photos")
     @Nullable
+    @Size(max = 5)
     private List<String> photos;
 
     @JsonProperty(value = "CalorieContent")
