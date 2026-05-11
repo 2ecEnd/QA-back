@@ -70,7 +70,7 @@ public class ProductController {
                 ResponseEntity.ok(new ChangeEntityResponse(changedCount)) ;
     }
 
-    @GetMapping("/{id}/delete")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<DeleteProductAcknowledge> deleteEntity(@PathVariable(name = "id") UUID id){
         DeleteProductAcknowledge acknowledge = productService.deleteEntity(id);
 

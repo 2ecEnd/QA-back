@@ -67,7 +67,7 @@ public class DishController {
                 ResponseEntity.ok(new ChangeEntityResponse(changedCount)) ;
     }
 
-    @GetMapping("/{id}/delete")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<DeleteDishAcknowledge> deleteEntity(@PathVariable(name = "id") UUID id){
         DeleteDishAcknowledge acknowledge = dishService.deleteEntity(id);
 
