@@ -2,12 +2,12 @@ spring:
   application:
     name: QA
   datasource:
-    url: jdbc:h2:mem:qa-test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:postgresql://localhost:5432/qa-test
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     open-in-view: false
     hibernate:

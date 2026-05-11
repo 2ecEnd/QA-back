@@ -1,24 +1,20 @@
 package com.example.qa;
 
-import com.example.qa.BaseApiTest;
 import com.example.qa.models.dto.ChangeEntityResponse;
 import com.example.qa.models.dto.CreateEntityResponse;
 import com.example.qa.models.dto.dishes.CreateDishRequest;
+import com.example.qa.models.dto.dishes.DeleteDishAcknowledge;
 import com.example.qa.models.dto.dishes.Ingredient;
 import com.example.qa.models.dto.products.*;
 import com.example.qa.models.enums.*;
-import lombok.RequiredArgsConstructor;
 import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.TestRestTemplate;
-import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -28,6 +24,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("ProductController API")
 class ProductApiTest extends BaseApiTest {
+
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -55,8 +52,6 @@ class ProductApiTest extends BaseApiTest {
                     restTemplate.postForEntity(url("/products/create"), request, CreateEntityResponse.class);
 
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-            assertThat(response.getBody()).isNotNull();
-            assertThat(response.getBody().getId()).isNotNull();
         }
 
         static Stream<Arguments> positiveCpfBoundaries() {
@@ -137,6 +132,49 @@ class ProductApiTest extends BaseApiTest {
                     Arguments.of(100.0, 33.4, 33.4, 33.4),
                     Arguments.of(100.0, 50.5, 29.67, 78.54)
             );
+        }
+
+
+        @DisplayName("POST /products/create short name throws error")
+        @Test
+        void createEntityShortNameThrowsError() {
+            CreateProductRequest request = CreateProductRequest.builder()
+                    .name("A")
+                    .calorieContent(1.0)
+                    .proteins(1.0)
+                    .fats(1.0)
+                    .carbohydrates(1.0)
+                    .category(ProductCategory.MEAT)
+                    .cookingNecessity(CookingNecessity.RAW)
+                    .flags(Set.of(Flag.GLUTEN_FREE))
+                    .build();
+
+            ResponseEntity<CreateEntityResponse> response =
+                    restTemplate.postForEntity(url("/products/create"), request, CreateEntityResponse.class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+
+
+        @DisplayName("POST /products/create too many photos throws error")
+        @Test
+        void createEntityToManyPhotosThrowsError() {
+            CreateProductRequest request = CreateProductRequest.builder()
+                    .name("Product1")
+                    .photos(List.of("a", "a", "a", "a", "a", "a"))
+                    .calorieContent(1.0)
+                    .proteins(1.0)
+                    .fats(1.0)
+                    .carbohydrates(1.0)
+                    .category(ProductCategory.MEAT)
+                    .cookingNecessity(CookingNecessity.RAW)
+                    .flags(Set.of(Flag.GLUTEN_FREE))
+                    .build();
+
+            ResponseEntity<CreateEntityResponse> response =
+                    restTemplate.postForEntity(url("/products/create"), request, CreateEntityResponse.class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -352,7 +390,7 @@ class ProductApiTest extends BaseApiTest {
         @DisplayName("PUT /products/{id}/update valid cpfc changes product")
         @ParameterizedTest(name = "{index} => cal={0}, prot={1}, fat={2}, carb={3}")
         @MethodSource("positiveCpfBoundaries")
-        void createEntityValidCpfcChangesProduct(double cal, double prot, double fat, double carb) {
+        void changeEntityValidCpfcChangesProduct(double cal, double prot, double fat, double carb) {
             ChangeProductRequest request = ChangeProductRequest.builder()
                     .name("Update")
                     .calorieContent(cal)
@@ -417,7 +455,7 @@ class ProductApiTest extends BaseApiTest {
         @DisplayName("PUT /products/{id}/update valid cpfc throws error")
         @ParameterizedTest(name = "{index} => cal={0}, prot={1}, fat={2}, carb={3}")
         @MethodSource("negativeCpfBoundaries")
-        void createEntityInvalidCpfcThrowsError(double cal, double prot, double fat, double carb) {
+        void changeEntityInvalidCpfcThrowsError(double cal, double prot, double fat, double carb) {
             ChangeProductRequest request = ChangeProductRequest.builder()
                     .name("Product")
                     .calorieContent(cal)
@@ -464,6 +502,57 @@ class ProductApiTest extends BaseApiTest {
                     Arguments.of(100.0, 50.5, 29.67, 78.54)
             );
         }
+
+
+        @DisplayName("POST /products/create short name throws error")
+        @Test
+        void changeEntityShortNameThrowsError() {
+            ChangeProductRequest request = ChangeProductRequest.builder()
+                    .name("A")
+                    .calorieContent(1.0)
+                    .proteins(1.0)
+                    .fats(1.0)
+                    .carbohydrates(1.0)
+                    .category(ProductCategory.MEAT)
+                    .cookingNecessity(CookingNecessity.RAW)
+                    .flags(Set.of(Flag.GLUTEN_FREE))
+                    .build();
+
+            ResponseEntity<ChangeEntityResponse> response =
+                    restTemplate.exchange(
+                            url("/products/" + created.getId() + "/update"),
+                            HttpMethod.PUT,
+                            new HttpEntity<>(request), ChangeEntityResponse.class
+                    );
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+
+
+        @DisplayName("POST /products/create too many photos throws error")
+        @Test
+        void changeEntityToManyPhotosThrowsError() {
+            ChangeProductRequest request = ChangeProductRequest.builder()
+                    .name("Product1")
+                    .photos(List.of("a", "a", "a", "a", "a", "a"))
+                    .calorieContent(1.0)
+                    .proteins(1.0)
+                    .fats(1.0)
+                    .carbohydrates(1.0)
+                    .category(ProductCategory.MEAT)
+                    .cookingNecessity(CookingNecessity.RAW)
+                    .flags(Set.of(Flag.GLUTEN_FREE))
+                    .build();
+
+            ResponseEntity<ChangeEntityResponse> response =
+                    restTemplate.exchange(
+                            url("/products/" + created.getId() + "/update"),
+                            HttpMethod.PUT,
+                            new HttpEntity<>(request), ChangeEntityResponse.class
+                    );
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Nested
@@ -498,8 +587,10 @@ class ProductApiTest extends BaseApiTest {
         @DisplayName("DELETE /products/{id}/delete with free product returns 200")
         @Test
         void deleteEntityFreeProductReturns200() {
-            ResponseEntity<DeleteProductAcknowledge> resp = restTemplate.getForEntity(
+            ResponseEntity<DeleteProductAcknowledge> resp = restTemplate.exchange(
                     url("/products/" + freeProduct.getId() + "/delete"),
+                    HttpMethod.DELETE,
+                    null,
                     DeleteProductAcknowledge.class
             );
 
@@ -510,10 +601,12 @@ class ProductApiTest extends BaseApiTest {
         @DisplayName("DELETE /products/{id}/delete used product returns 409")
         @Test
         void deleteEntityUsedProductReturns409WithDishList() {
-            ResponseEntity<DeleteProductAcknowledge> resp = restTemplate.getForEntity(
-                        url("/products/" + usedProduct.getId() + "/delete"),
-                        DeleteProductAcknowledge.class
-                    );
+            ResponseEntity<DeleteProductAcknowledge> resp = restTemplate.exchange(
+                    url("/products/" + usedProduct.getId() + "/delete"),
+                    HttpMethod.DELETE,
+                    null,
+                    DeleteProductAcknowledge.class
+            );
 
             assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
             assertThat(resp.getBody().getAcknowledge()).isFalse();

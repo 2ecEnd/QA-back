@@ -17,7 +17,7 @@ public abstract class BaseApiTest {
     protected int port;
 
     @Autowired
-    private JdbcTemplate jdbc;
+    protected JdbcTemplate jdbc;
 
     @BeforeEach
     void cleanDatabase() {
