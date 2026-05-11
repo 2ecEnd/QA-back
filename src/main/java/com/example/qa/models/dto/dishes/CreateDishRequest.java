@@ -49,6 +49,7 @@ public class CreateDishRequest {
     public List<Ingredient> composition;
 
     @JsonProperty(value = "Size")
+    @DecimalMin("0")
     public Double size;
 
     @JsonProperty(value = "Category")
