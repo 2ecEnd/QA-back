@@ -26,12 +26,12 @@ public class ChangeProductRequest {
 
     @JsonProperty(value = "Name")
     @Size(min = 2)
-    private String name;
+    public String name;
 
     @JsonProperty(value = "Photos")
     @Nullable
     @Size(max = 5)
-    private List<String> photos;
+    public List<String> photos;
 
     @JsonProperty(value = "CalorieContent")
     @DecimalMin("0")
