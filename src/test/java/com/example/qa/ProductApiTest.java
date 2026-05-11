@@ -30,100 +30,209 @@ class ProductApiTest extends BaseApiTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    // Создание продукта с валидными данными
-    @Test
-    @DisplayName("POST /products/create – создать продукт")
-    void createProduct() {
-        CreateProductRequest request = CreateProductRequest.builder()
-                .name("Курица")
-                .calorieContent(110.0)
-                .proteins(23.0)
-                .fats(1.0)
-                .carbohydrates(0.0)
-                .category(ProductCategory.MEAT)
-                .cookingNecessity(CookingNecessity.RAW)
-                .flags(Set.of(Flag.GLUTEN_FREE))
-                .build();
+    @Nested
+    @DisplayName("POST /products/create")
+    class CreateEntity {
 
-        ResponseEntity<CreateEntityResponse> response = restTemplate.postForEntity(
-                url("/products/create"), request, CreateEntityResponse.class);
+        @DisplayName("POST /products/create creates new product")
+        @ParameterizedTest(name = "{index} => cal={0}, prot={1}, fat={2}, carb={3}")
+        @MethodSource("positiveCpfBoundaries")
+        void createEntityPositiveDataCreatesEntity(double cal, double prot, double fat, double carb) {
+            CreateProductRequest request = CreateProductRequest.builder()
+                    .name("Product")
+                    .calorieContent(cal)
+                    .proteins(prot)
+                    .fats(fat)
+                    .carbohydrates(carb)
+                    .category(ProductCategory.MEAT)
+                    .cookingNecessity(CookingNecessity.RAW)
+                    .flags(Set.of(Flag.GLUTEN_FREE))
+                    .build();
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getId()).isNotNull();
+            ResponseEntity<CreateEntityResponse> response =
+                    restTemplate.postForEntity(url("/products/create"), request, CreateEntityResponse.class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+            assertThat(response.getBody()).isNotNull();
+            assertThat(response.getBody().getId()).isNotNull();
+        }
+
+        static Stream<Arguments> positiveCpfBoundaries() {
+            return Stream.of(
+                    Arguments.of(0.0, 0.0, 0.0, 0.0),
+                    Arguments.of(1.0, 0.0, 0.0, 0.0),
+                    Arguments.of(0.0, 1.0, 0.0, 0.0),
+                    Arguments.of(0.0, 0.0, 1.0, 0.0),
+                    Arguments.of(0.0, 0.0, 0.0, 1.0),
+                    Arguments.of(0, 0, 0, 0),
+                    Arguments.of(1, 0, 0, 0),
+                    Arguments.of(0, 1, 0, 0),
+                    Arguments.of(0, 0, 1, 0),
+                    Arguments.of(0, 0, 0, 1),
+                    Arguments.of(100, 0, 0, 0),
+                    Arguments.of(0, 100, 0, 0),
+                    Arguments.of(0, 0, 100, 0),
+                    Arguments.of(0, 0, 0, 100),
+                    Arguments.of(0, 99.9, 0, 0),
+                    Arguments.of(0, 0, 99.9, 0),
+                    Arguments.of(0, 0, 0, 99.9),
+                    Arguments.of(0.1, 0, 0, 0),
+                    Arguments.of(0, 0.1, 0, 0),
+                    Arguments.of(0, 0, 0.1, 0),
+                    Arguments.of(0, 0, 0, 0.1),
+                    Arguments.of(0.00001, 0, 0, 0),
+                    Arguments.of(0, 0.00001, 0, 0),
+                    Arguments.of(0, 0, 0.00001, 0),
+                    Arguments.of(0, 0, 0, 0.00001),
+                    Arguments.of(100, 1, 2, 3),
+                    Arguments.of(100, 5.5, 3.4, 12.3)
+            );
+        }
+
+
+        @DisplayName("POST /products/create throws error")
+        @ParameterizedTest(name = "{index} => cal={0}, prot={1}, fat={2}, carb={3}")
+        @MethodSource("negativeCpfBoundaries")
+        void createEntityNegativeDataThrowsError(double cal, double prot, double fat, double carb) {
+            CreateProductRequest request = CreateProductRequest.builder()
+                    .name("Product")
+                    .calorieContent(cal)
+                    .proteins(prot)
+                    .fats(fat)
+                    .carbohydrates(carb)
+                    .category(ProductCategory.MEAT)
+                    .cookingNecessity(CookingNecessity.RAW)
+                    .flags(Set.of(Flag.GLUTEN_FREE))
+                    .build();
+
+            ResponseEntity<CreateEntityResponse> response =
+                    restTemplate.postForEntity(url("/products/create"), request, CreateEntityResponse.class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+
+        static Stream<Arguments> negativeCpfBoundaries() {
+            return Stream.of(
+                    Arguments.of(-1, 0, 0, 0),
+                    Arguments.of(0, -1, 0, 0),
+                    Arguments.of(0, 0, -1, 0),
+                    Arguments.of(0, 0, 0, -1),
+                    Arguments.of(-0.1, 0, 0, 0),
+                    Arguments.of(0, -0.1, 0, 0),
+                    Arguments.of(0, 0, -0.1, 0),
+                    Arguments.of(0, 0, 0, -0.1),
+                    Arguments.of(-0.00001, 0, 0, 0),
+                    Arguments.of(0, -0.00001, 0, 0),
+                    Arguments.of(0, 0, -0.00001, 0),
+                    Arguments.of(0, 0, 0, -0.00001),
+                    Arguments.of(0, 101, 0, 0),
+                    Arguments.of(0, 0.0, 101, 0.0),
+                    Arguments.of(0, 0.0, 0.0, 101),
+                    Arguments.of(0, 100.1, 0, 0),
+                    Arguments.of(0, 0.0, 100.1, 0.0),
+                    Arguments.of(0, 0.0, 0.0, 100.1),
+                    Arguments.of(10, 50, 40, 30),
+                    Arguments.of(100.0, 33.4, 33.4, 33.4),
+                    Arguments.of(100.0, 50.5, 29.67, 78.54)
+            );
+        }
     }
 
-    // Граничные значения БЖУ – параметризованный тест
-    @ParameterizedTest(name = "{index} => prot={0}, fat={1}, carb={2}")
-    @MethodSource("bjuBoundaries")
-    void createProductBjuValidation(double prot, double fat, double carb) {
-        CreateProductRequest req = CreateProductRequest.builder()
-                .name("Boundary")
-                .calorieContent(100.0)
-                .proteins(prot)
-                .fats(fat)
-                .carbohydrates(carb)
-                .category(ProductCategory.FOOD)
-                .cookingNecessity(CookingNecessity.READY)
-                .build();
 
-        ResponseEntity<String> resp = restTemplate.postForEntity(url("/products/create"), req, String.class);
-        assertThat(resp.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    @Nested
+    @DisplayName("POST /products/create")
+    class GetEntities {
+
+        @BeforeEach
+        void addProducts() {
+            CreateProductRequest req1 = CreateProductRequest.builder()
+                    .name("Банан")
+                    .calorieContent(89.0)
+                    .proteins(1.1)
+                    .fats(0.3)
+                    .carbohydrates(22.8)
+                    .category(ProductCategory.SWEETS)
+                    .cookingNecessity(CookingNecessity.READY)
+                    .flags(Set.of(Flag.GLUTEN_FREE))
+                    .build();
+            restTemplate.postForEntity(url("/products/create"), req1, CreateEntityResponse.class);
+
+            CreateProductRequest req2 = CreateProductRequest.builder()
+                    .name("Говядина")
+                    .calorieContent(250.0)
+                    .proteins(26.0)
+                    .fats(15.0)
+                    .carbohydrates(0.0)
+                    .category(ProductCategory.MEAT)
+                    .cookingNecessity(CookingNecessity.RAW)
+                    .flags(Set.of(Flag.GLUTEN_FREE, Flag.SUGAR_FREE))
+                    .build();
+            restTemplate.postForEntity(url("/products/create"), req2, CreateEntityResponse.class);
+        }
+
+
+        @DisplayName("GET /products with filters returns correct products list")
+        @Test
+        void getEntitiesCategoryReturnsCorrectProductList() {
+            ResponseEntity<ProductDto[]> response =
+                    restTemplate.getForEntity(url("/products?category=SWEETS"), ProductDto[].class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(response.getBody()).hasSize(1);
+            assertThat(response.getBody()[0].getName()).isEqualTo("Банан");
+            assertThat(response.getBody().length).isEqualTo(1);
+        }
+
+        @DisplayName("GET /products with filters returns correct products list")
+        @Test
+        void getEntitiesCookingNecessityReturnsCorrectProductList() {
+            ResponseEntity<ProductDto[]> response =
+                    restTemplate.getForEntity(url("/products?readinessDegree=RAW"), ProductDto[].class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(response.getBody()).hasSize(1);
+            assertThat(response.getBody()[0].getName()).isEqualTo("Говядина");
+            assertThat(response.getBody().length).isEqualTo(1);
+        }
+
+        @DisplayName("GET /products with filters returns correct products list")
+        @Test
+        void getEntitiesFlagsReturnsCorrectProductList() {
+            ResponseEntity<ProductDto[]> response =
+                    restTemplate.getForEntity(url("/products?flags=GLUTEN_FREE&flags=SUGAR_FREE"), ProductDto[].class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(response.getBody()).hasSize(1);
+            assertThat(response.getBody()[0].getName()).isEqualTo("Говядина");
+            assertThat(response.getBody().length).isEqualTo(1);
+        }
+
+        @DisplayName("GET /products with filters returns correct products list")
+        @Test
+        void getEntitiesFilterReturnsCorrectProductList() {
+            ResponseEntity<ProductDto[]> response =
+                    restTemplate.getForEntity(url("/products?search=гов"), ProductDto[].class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(response.getBody()).hasSize(1);
+            assertThat(response.getBody()[0].getName()).isEqualTo("Говядина");
+            assertThat(response.getBody().length).isEqualTo(1);
+        }
+
+        @DisplayName("GET /products with filters returns correct products list")
+        @Test
+        void getEntitiesSortReturnsCorrectProductList() {
+            ResponseEntity<ProductDto[]> response =
+                    restTemplate.getForEntity(url("/products?sort=NAME"), ProductDto[].class);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(response.getBody()).hasSize(2);
+            assertThat(response.getBody().length).isEqualTo(2);
+            assertThat(response.getBody()[0].getName()).isEqualTo("Банан");
+            assertThat(response.getBody()[1].getName()).isEqualTo("Говядина");
+        }
     }
-
-    static Stream<Arguments> bjuBoundaries() {
-        return Stream.of(
-                Arguments.of(0.0, 0.0, 100.0),
-                Arguments.of(99.9, 0.1, 0.0),
-                Arguments.of(33, 33, 33)
-        );
-    }
-
-    /*
-    // Получение списка продуктов с фильтрами и поиском
-    @Test
-    void getProducts() {
-        // Создадим два продукта
-        CreateProductRequest req1 = CreateProductRequest.builder()
-                .name("Банан")
-                .calorieContent(89.0)
-                .proteins(1.1)
-                .fats(0.3)
-                .carbohydrates(22.8)
-                .category(ProductCategory.SWEETS)
-                .cookingNecessity(CookingNecessity.READY)
-                .build();
-        restTemplate.postForEntity(url("/products/create"), req1, CreateEntityResponse.class);
-
-        CreateProductRequest req2 = CreateProductRequest.builder()
-                .name("Говядина")
-                .calorieContent(250.0)
-                .proteins(26.0)
-                .fats(15.0)
-                .carbohydrates(0.0)
-                .category(ProductCategory.MEAT)
-                .cookingNecessity(CookingNecessity.RAW)
-                .build();
-        restTemplate.postForEntity(url("/products/create"), req2, CreateEntityResponse.class);
-
-        // Поиск по подстроке "гов"
-        ResponseEntity<String> rawResp = restTemplate.getForEntity(
-                url("/products?search=гов"), String.class);
-        System.out.println("Raw response: " + rawResp.getBody());
-
-        ResponseEntity<ProductDto[]> response = restTemplate.getForEntity(
-                url("/products?search=гов"), ProductDto[].class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).hasSize(1);
-        assertThat(response.getBody()[0].getName()).isEqualTo("Говядина");
-
-        // Фильтр по категории
-        ResponseEntity<ProductDto[]> sweetsResp = restTemplate.getForEntity(
-                url("/products?category=SWEETS"), ProductDto[].class);
-        assertThat(sweetsResp.getBody()).hasSize(1);
-        assertThat(sweetsResp.getBody()[0].getCategory()).isEqualTo(ProductCategory.SWEETS);
-    }
-
+/*
     // Получение продукта по ID
     @Test
     void getProductById() {
