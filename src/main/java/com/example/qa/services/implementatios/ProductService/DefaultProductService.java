@@ -117,10 +117,15 @@ public class DefaultProductService implements ProductService{
         product.setCookingNecessity(request.cookingNecessity);
         product.setFlags(request.flags);
 
-        if (oldPhotos != product.getPhotos()) {
-            oldPhotos.stream()
-                    .filter(url -> !request.getPhotos().contains(url))
-                    .forEach(fileStorageService::deleteFile);
+        if (oldPhotos != null) {
+            List<String> newPhotos = request.getPhotos();
+            if (newPhotos == null) {
+                oldPhotos.forEach(fileStorageService::deleteFile);
+            } else {
+                oldPhotos.stream()
+                        .filter(url -> !newPhotos.contains(url))
+                        .forEach(fileStorageService::deleteFile);
+            }
         }
         productRepository.save(product);
 

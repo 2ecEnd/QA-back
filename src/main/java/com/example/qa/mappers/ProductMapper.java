@@ -5,6 +5,9 @@ import com.example.qa.models.dto.products.ProductDto;
 import com.example.qa.models.entities.Product;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 @Component
 public class ProductMapper {
 
@@ -12,7 +15,7 @@ public class ProductMapper {
         return ProductDto.builder()
                 .id(product.getId())
                 .name(product.getName())
-                .photos(product.getPhotos())
+                .photos(new ArrayList<>(product.getPhotos()))
                 .calorieContent(product.getCalorieContent())
                 .proteins(product.getProteins())
                 .fats(product.getFats())
@@ -20,7 +23,7 @@ public class ProductMapper {
                 .composition(product.getComposition())
                 .category(product.getCategory())
                 .cookingNecessity(product.getCookingNecessity())
-                .flags(product.getFlags())
+                .flags(new HashSet<>(product.getFlags()))
                 .creationDate(product.getCreatedAt())
                 .editDate(product.getUpdatedAt())
                 .build();
