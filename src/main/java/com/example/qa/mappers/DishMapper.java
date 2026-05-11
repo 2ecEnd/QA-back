@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -19,22 +21,22 @@ public class DishMapper {
         return DishDto.builder()
                 .id(dish.getId())
                 .name(dish.getName())
-                .photos(dish.getPhotos())
+                .photos(new ArrayList<>(dish.getPhotos()))
                 .calorieContent(dish.getCalorieContent())
                 .proteins(dish.getProteins())
                 .fats(dish.getFats())
                 .carbohydrates(dish.getCarbohydrates())
-                .composition(dish.getComposition().stream()
+                .composition(dish.getComposition() == null ? null :
+                        dish.getComposition().stream()
                         .map(obj -> Ingredient.builder()
                                 .productId(obj.product.getId())
                                 .productName(obj.product.getName())
                                 .amount(obj.amount)
                                 .build())
-                        .toList()
-                )
+                        .collect(Collectors.toList()))
                 .size(dish.getSize())
                 .category(dish.getCategory())
-                .flags(dish.getFlags())
+                .flags(new HashSet<>(dish.getFlags()))
                 .creationDate(dish.getCreatedAt())
                 .editDate(dish.getUpdatedAt())
                 .build();
