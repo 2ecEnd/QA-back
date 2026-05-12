@@ -146,7 +146,7 @@ public class DefaultDishService implements DishService {
         }
         request.setCategory(category);
 
-        // Применяем основные поля
+        // Применение основных полей
         dish.setName(request.getName());
         dish.setPhotos(request.getPhotos());
         dish.setCalorieContent(request.getCalorieContent());
@@ -156,7 +156,7 @@ public class DefaultDishService implements DishService {
         dish.setSize(request.getSize());
         dish.setCategory(request.getCategory());
 
-        // Обновляем состав
+        // Обновление состава
         List<DishProduct> currentComposition = dish.getComposition();
         currentComposition.clear();
         List<DishProduct> newComposition = request.getComposition().stream()
