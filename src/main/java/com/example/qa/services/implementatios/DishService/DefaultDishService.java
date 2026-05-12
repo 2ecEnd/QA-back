@@ -146,7 +146,7 @@ public class DefaultDishService implements DishService {
         }
         request.setCategory(category);
 
-        // Применяем основные поля
+        // Применение основных полей
         dish.setName(request.getName());
         dish.setPhotos(request.getPhotos());
         dish.setCalorieContent(request.getCalorieContent());
@@ -156,7 +156,7 @@ public class DefaultDishService implements DishService {
         dish.setSize(request.getSize());
         dish.setCategory(request.getCategory());
 
-        // Обновляем состав
+        // Обновление состава
         List<DishProduct> currentComposition = dish.getComposition();
         currentComposition.clear();
         List<DishProduct> newComposition = request.getComposition().stream()
@@ -166,7 +166,7 @@ public class DefaultDishService implements DishService {
                         .amount(ingredient.amount)
                         .build()
                 )
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
         currentComposition.addAll(newComposition);
 
         Set<Flag> flagsToSet = request.getFlags() != null ? new HashSet<>(request.getFlags()) : null;
@@ -199,7 +199,7 @@ public class DefaultDishService implements DishService {
 
     private void enforceFlags(Dish dish, Set<Flag> requestedFlags) {
         if (requestedFlags == null || requestedFlags.isEmpty()) {
-            dish.setFlags(Set.of());
+            dish.setFlags(new HashSet<>());
             return;
         }
 
@@ -208,13 +208,13 @@ public class DefaultDishService implements DishService {
                 .toList();
 
         if (products.isEmpty()) {
-            dish.setFlags(Set.of());
+            dish.setFlags(new HashSet<>());
             return;
         }
 
         Set<Flag> allowedFlags = requestedFlags.stream()
                 .filter(flag -> products.stream().allMatch(p -> p.getFlags().contains(flag)))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(HashSet::new));
 
         dish.setFlags(allowedFlags);
     }
